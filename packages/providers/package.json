@@ -1,0 +1,42 @@
+{
+  "name": "@chatbot/providers",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./google": {
+      "types": "./dist/google.d.ts",
+      "import": "./dist/google.mjs",
+      "require": "./dist/google.js"
+    },
+    "./perplexity": {
+      "types": "./dist/perplexity.d.ts",
+      "import": "./dist/perplexity.mjs",
+      "require": "./dist/perplexity.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@chatbot/core": "workspace:*",
+    "@ai-sdk/google": "^3.0.0",
+    "@ai-sdk/perplexity": "^3.0.0",
+    "ai": "^6.0.0"
+  },
+  "devDependencies": {
+    "@chatbot/tsconfig": "workspace:*",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0"
+  }
+}
