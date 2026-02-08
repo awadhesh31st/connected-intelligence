@@ -43,6 +43,11 @@ const config: Config = {
         "chatbot-fade-in": "chatbot-fade-in 0.2s ease-out",
         "chatbot-slide-up": "chatbot-slide-up 0.3s ease-out",
         "chatbot-bounce": "chatbot-bounce 1.4s infinite ease-in-out",
+        "landing-float": "landing-float 6s ease-in-out infinite",
+        "landing-pulse-glow": "landing-pulse-glow 4s ease-in-out infinite",
+        "landing-gradient-spin": "landing-gradient-spin 8s linear infinite",
+        "landing-fade-in-up": "landing-fade-in-up 0.6s ease-out forwards",
+        "landing-typing-cursor": "landing-typing-cursor 1s ease-in-out infinite",
       },
       keyframes: {
         "chatbot-fade-in": {
@@ -56,6 +61,26 @@ const config: Config = {
         "chatbot-bounce": {
           "0%, 80%, 100%": { transform: "scale(0)" },
           "40%": { transform: "scale(1)" },
+        },
+        "landing-float": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-20px)" },
+        },
+        "landing-pulse-glow": {
+          "0%, 100%": { opacity: "0.6", transform: "scale(1)" },
+          "50%": { opacity: "1", transform: "scale(1.05)" },
+        },
+        "landing-gradient-spin": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+        "landing-fade-in-up": {
+          "0%": { opacity: "0", transform: "translateY(30px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "landing-typing-cursor": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0" },
         },
       },
     },

@@ -13,9 +13,19 @@ export default function EcommercePage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <h1 className="text-2xl font-bold text-amber-900">TechStore</h1>
           <nav className="flex gap-6 text-sm text-amber-700">
-            <a href="#" className="hover:text-amber-900">Products</a>
-            <a href="#" className="hover:text-amber-900">Deals</a>
-            <a href="#" className="hover:text-amber-900">Support</a>
+            <a href="#products" className="hover:text-amber-900">Products</a>
+            <span className="text-amber-400 cursor-default relative group">
+              Deals
+              <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] text-white bg-amber-900 rounded px-1.5 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                Coming Soon
+              </span>
+            </span>
+            <span className="text-amber-400 cursor-default relative group">
+              Support
+              <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] text-white bg-amber-900 rounded px-1.5 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                Coming Soon
+              </span>
+            </span>
           </nav>
         </div>
       </header>
@@ -32,7 +42,7 @@ export default function EcommercePage() {
       </section>
 
       {/* Product Grid */}
-      <section className="mx-auto max-w-6xl px-6 py-12">
+      <section id="products" className="mx-auto max-w-6xl px-6 py-12">
         <h3 className="text-xl font-semibold text-amber-900 mb-6">Featured Products</h3>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((product) => (

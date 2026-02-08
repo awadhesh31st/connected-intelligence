@@ -100,15 +100,24 @@ export default function PortfolioPage() {
           Use the chat assistant to learn more about my work, or reach out directly.
         </p>
         <div className="flex justify-center gap-4 text-sm">
-          <a href={`mailto:${portfolioOwner.email}`} className="text-purple-400 hover:underline">
+          <span className="text-purple-400/50 cursor-default relative group">
             Email
-          </a>
-          <a href={portfolioOwner.github} className="text-purple-400 hover:underline">
+            <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] text-white bg-purple-900 rounded px-1.5 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+              Demo Only
+            </span>
+          </span>
+          <span className="text-purple-400/50 cursor-default relative group">
             GitHub
-          </a>
-          <a href={portfolioOwner.linkedin} className="text-purple-400 hover:underline">
+            <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] text-white bg-purple-900 rounded px-1.5 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+              Demo Only
+            </span>
+          </span>
+          <span className="text-purple-400/50 cursor-default relative group">
             LinkedIn
-          </a>
+            <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] text-white bg-purple-900 rounded px-1.5 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+              Demo Only
+            </span>
+          </span>
         </div>
       </section>
 
