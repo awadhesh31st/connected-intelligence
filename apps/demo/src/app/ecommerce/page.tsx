@@ -37,7 +37,7 @@ export default function EcommercePage() {
           Use the chat assistant to find the perfect product for you
         </p>
         <a href="/" className="text-amber-600 text-sm hover:underline">
-          ← Back to demo selector
+          ← Back to home
         </a>
       </section>
 

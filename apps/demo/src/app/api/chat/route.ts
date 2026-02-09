@@ -23,7 +23,17 @@ const contexts: Record<string, ContextEngine> = {
     createPortfolioContext(portfolioOwner.name, {
       projects,
       skills: portfolioOwner.skills,
-      bio: portfolioOwner.bio,
+      bio: portfolioOwner.summary,
+      title: portfolioOwner.title,
+      experience: portfolioOwner.experience,
+      education: portfolioOwner.education,
+      totalExperienceMonths: portfolioOwner.totalExperienceMonths,
+      contact: {
+        email: portfolioOwner.email,
+        phone: portfolioOwner.phone,
+        linkedin: portfolioOwner.linkedin,
+        github: portfolioOwner.github,
+      },
     })
   ),
 };

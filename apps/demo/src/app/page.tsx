@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+import Link from "next/link";
+
 /* ─────────────── Zona Pro Pastel Theme ─────────────── */
 /* Lavender #CDA9EE · Blue #A4C1EE · Black #000 · Cream #F6F1E8 · Yellow #FFD696 */
 
@@ -80,11 +83,46 @@ const FEATURES = [
 ] as const;
 
 const ARCH_BOXES = [
-  { label: "Demo App", sub: "Next.js 15", color: "bg-[#CDA9EE]/30 border-[#CDA9EE]/40" },
-  { label: "@chatbot/ui", sub: "Components", color: "bg-[#A4C1EE]/30 border-[#A4C1EE]/40" },
-  { label: "@chatbot/core", sub: "Types & Engine", color: "bg-[#FFD696]/30 border-[#FFD696]/40" },
-  { label: "@chatbot/providers", sub: "Google, Perplexity", color: "bg-[#CDA9EE]/30 border-[#CDA9EE]/40" },
-  { label: "API Route", sub: "streamText()", color: "bg-[#A4C1EE]/30 border-[#A4C1EE]/40" },
+  {
+    label: "Demo App",
+    sub: "Next.js 15",
+    color: "bg-[#CDA9EE]/30 border-[#CDA9EE]/40",
+    files: "9 files",
+    details: ["3 pages (landing, e-commerce, portfolio)", "API route handler", "Platform config presets"],
+    badges: ["Next.js", "React 19"],
+  },
+  {
+    label: "@chatbot/ui",
+    sub: "Components",
+    color: "bg-[#A4C1EE]/30 border-[#A4C1EE]/40",
+    files: "33 files",
+    details: ["22 components, 3 hooks", "ChatProvider + ThemeProvider", "CSS variable theme system"],
+    badges: ["React", "Tailwind"],
+  },
+  {
+    label: "@chatbot/core",
+    sub: "Types & Engine",
+    color: "bg-[#FFD696]/30 border-[#FFD696]/40",
+    files: "19 files",
+    details: ["7 type definitions", "ContextEngine + ContextBuilder", "Error handling + retry logic"],
+    badges: ["TypeScript", "Zod"],
+  },
+  {
+    label: "@chatbot/providers",
+    sub: "Google, Perplexity",
+    color: "bg-[#CDA9EE]/30 border-[#CDA9EE]/40",
+    files: "7 files",
+    details: ["Registry + Adapter pattern", "Gemini + Sonar models", "Extensible provider interface"],
+    badges: ["AI SDK v6"],
+  },
+  {
+    label: "API Route",
+    sub: "streamText()",
+    color: "bg-[#A4C1EE]/30 border-[#A4C1EE]/40",
+    files: "1 file",
+    details: ["Server-side streaming", "UIMessage → ModelMessage conversion", "SSE response"],
+    badges: ["Node.js"],
+  },
 ] as const;
 
 const DASHBOARD_TASKS = [
@@ -97,6 +135,8 @@ const DASHBOARD_TASKS = [
 /* ─────────────── Page Component ─────────────── */
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState<"dashboard" | "packages" | "settings">("dashboard");
+
   return (
     <div className="min-h-screen bg-[#F6F1E8]">
 
@@ -147,15 +187,6 @@ export default function Home() {
           </div>
 
           <div className="relative z-10 max-w-2xl">
-            {/* Color palette display */}
-            <div className="flex items-center gap-2 mb-10">
-              <span className="w-6 h-6 rounded-full bg-[#CDA9EE]" />
-              <span className="w-6 h-6 rounded-full bg-[#A4C1EE]" />
-              <span className="w-6 h-6 rounded-full bg-[#FFD696]" />
-              <span className="w-6 h-6 rounded-full bg-white" />
-              <span className="ml-3 text-xs text-white/30 tracking-widest uppercase">Zona Pro Theme</span>
-            </div>
-
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight">
               The modern way
               <br />
@@ -169,23 +200,23 @@ export default function Home() {
             </p>
 
             <div className="flex items-center gap-4 mt-10">
-              <a
-                href="/ecommerce"
+              <Link
+                href="/portfolio"
                 className="inline-flex items-center gap-2 rounded-full bg-[#CDA9EE] text-black px-7 py-3.5 text-sm font-semibold tracking-wide hover:bg-[#c49de8] transition-colors"
               >
                 Try Live Demo
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                 </svg>
-              </a>
+              </Link>
               <a href="#architecture" className="text-sm text-white/40 hover:text-white/70 transition-colors tracking-wide">
                 View Architecture
               </a>
             </div>
           </div>
 
-          {/* Floating chat preview — right side */}
-          <div className="hidden lg:block absolute top-16 right-12 w-[320px]">
+          {/* Floating chat preview — right side (static mockup) */}
+          <div className="hidden lg:block absolute top-16 right-12 w-[320px] pointer-events-none select-none">
             <div className="rounded-[20px] bg-white/5 border border-white/10 backdrop-blur-sm p-4 shadow-2xl">
               <div className="flex items-center gap-2 mb-4">
                 <span className="w-2 h-2 rounded-full bg-[#CDA9EE]" />
@@ -254,80 +285,222 @@ export default function Home() {
             {/* Sidebar */}
             <div className="lg:w-56 border-b lg:border-b-0 lg:border-r border-black/5 p-5 lg:p-6">
               <div className="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-visible">
-                <div className="flex items-center gap-2 rounded-xl bg-[#CDA9EE]/15 px-3 py-2 min-w-max">
-                  <svg className="w-4 h-4 text-[#8B5EC0]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <button
+                  onClick={() => setActiveTab("dashboard")}
+                  className={`flex items-center gap-2 rounded-xl px-3 py-2 min-w-max transition-colors ${
+                    activeTab === "dashboard"
+                      ? "bg-[#CDA9EE]/15"
+                      : "hover:bg-black/[0.03] cursor-pointer"
+                  }`}
+                >
+                  <svg className={`w-4 h-4 ${activeTab === "dashboard" ? "text-[#8B5EC0]" : "text-black/30"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
                   </svg>
-                  <span className="text-xs font-semibold text-[#8B5EC0]">Dashboard</span>
-                </div>
-                <div className="flex items-center gap-2 rounded-xl px-3 py-2 min-w-max">
-                  <svg className="w-4 h-4 text-black/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <span className={`text-xs font-semibold ${activeTab === "dashboard" ? "text-[#8B5EC0]" : "text-black/30"}`}>Dashboard</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab("packages")}
+                  className={`flex items-center gap-2 rounded-xl px-3 py-2 min-w-max transition-colors ${
+                    activeTab === "packages"
+                      ? "bg-[#CDA9EE]/15"
+                      : "hover:bg-black/[0.03] cursor-pointer"
+                  }`}
+                >
+                  <svg className={`w-4 h-4 ${activeTab === "packages" ? "text-[#8B5EC0]" : "text-black/30"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
                   </svg>
-                  <span className="text-xs text-black/30">Packages</span>
-                </div>
-                <div className="flex items-center gap-2 rounded-xl px-3 py-2 min-w-max">
-                  <svg className="w-4 h-4 text-black/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <span className={`text-xs font-semibold ${activeTab === "packages" ? "text-[#8B5EC0]" : "text-black/30"}`}>Packages</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab("settings")}
+                  className={`flex items-center gap-2 rounded-xl px-3 py-2 min-w-max transition-colors ${
+                    activeTab === "settings"
+                      ? "bg-[#CDA9EE]/15"
+                      : "hover:bg-black/[0.03] cursor-pointer"
+                  }`}
+                >
+                  <svg className={`w-4 h-4 ${activeTab === "settings" ? "text-[#8B5EC0]" : "text-black/30"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                   </svg>
-                  <span className="text-xs text-black/30">Settings</span>
-                </div>
+                  <span className={`text-xs font-semibold ${activeTab === "settings" ? "text-[#8B5EC0]" : "text-black/30"}`}>Settings</span>
+                </button>
               </div>
             </div>
 
             {/* Main content */}
             <div className="flex-1 p-6 lg:p-8">
-              {/* KPI cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                <div className="rounded-[16px] bg-[#CDA9EE]/15 p-5">
-                  <p className="text-xs text-black/40 font-medium tracking-wide">Messages Today</p>
-                  <p className="text-2xl font-bold text-black mt-1 tracking-tight">2,847</p>
-                  <p className="text-[11px] text-[#8B5EC0] mt-1 font-medium">+12.5%</p>
-                </div>
-                <div className="rounded-[16px] bg-[#FFD696]/20 p-5">
-                  <p className="text-xs text-black/40 font-medium tracking-wide">Avg Response</p>
-                  <p className="text-2xl font-bold text-black mt-1 tracking-tight">1.2s</p>
-                  <p className="text-[11px] text-[#B8862D] mt-1 font-medium">-340ms</p>
-                </div>
-                <div className="rounded-[16px] bg-[#A4C1EE]/20 p-5">
-                  <p className="text-xs text-black/40 font-medium tracking-wide">Active Providers</p>
-                  <p className="text-2xl font-bold text-black mt-1 tracking-tight">2</p>
-                  <p className="text-[11px] text-[#5B8BC9] mt-1 font-medium">Gemini + Sonar</p>
-                </div>
-              </div>
+              {/* Dashboard tab */}
+              {activeTab === "dashboard" && (
+                <div className="pointer-events-none select-none">
+                  {/* KPI cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                    <div className="rounded-[16px] bg-[#CDA9EE]/15 p-5">
+                      <p className="text-xs text-black/40 font-medium tracking-wide">Messages Today</p>
+                      <p className="text-2xl font-bold text-black mt-1 tracking-tight">2,847</p>
+                      <p className="text-[11px] text-[#8B5EC0] mt-1 font-medium">+12.5%</p>
+                    </div>
+                    <div className="rounded-[16px] bg-[#FFD696]/20 p-5">
+                      <p className="text-xs text-black/40 font-medium tracking-wide">Avg Response</p>
+                      <p className="text-2xl font-bold text-black mt-1 tracking-tight">1.2s</p>
+                      <p className="text-[11px] text-[#B8862D] mt-1 font-medium">-340ms</p>
+                    </div>
+                    <div className="rounded-[16px] bg-[#A4C1EE]/20 p-5">
+                      <p className="text-xs text-black/40 font-medium tracking-wide">Active Providers</p>
+                      <p className="text-2xl font-bold text-black mt-1 tracking-tight">2</p>
+                      <p className="text-[11px] text-[#5B8BC9] mt-1 font-medium">Gemini + Sonar</p>
+                    </div>
+                  </div>
 
-              {/* Task board */}
-              <div className="rounded-[16px] bg-[#F6F1E8]/60 border border-black/5 p-5">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-sm font-semibold text-black tracking-tight">Integration Tasks</h4>
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#CDA9EE]" />
-                    <span className="text-[11px] text-black/30">4 tasks</span>
+                  {/* Task board */}
+                  <div className="rounded-[16px] bg-[#F6F1E8]/60 border border-black/5 p-5">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-sm font-semibold text-black tracking-tight">Integration Tasks</h4>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-[#CDA9EE]" />
+                        <span className="text-[11px] text-black/30">4 tasks</span>
+                      </div>
+                    </div>
+                    <div className="space-y-2.5">
+                      {DASHBOARD_TASKS.map((task) => (
+                        <div key={task.title} className="flex items-center gap-3 rounded-xl bg-white px-4 py-3 border border-black/5">
+                          <span className={`w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0 ${
+                            task.status === "Done" ? "border-[#CDA9EE] bg-[#CDA9EE]" : "border-black/10 bg-transparent"
+                          }`}>
+                            {task.status === "Done" && (
+                              <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                              </svg>
+                            )}
+                          </span>
+                          <span className={`text-sm flex-1 ${task.status === "Done" ? "text-black/30 line-through" : "text-black/70"}`}>
+                            {task.title}
+                          </span>
+                          <span className={`text-[10px] font-semibold rounded-full px-2.5 py-0.5 ${task.tagColor}`}>
+                            {task.tag}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-2.5">
-                  {DASHBOARD_TASKS.map((task) => (
-                    <div key={task.title} className="flex items-center gap-3 rounded-xl bg-white px-4 py-3 border border-black/5">
-                      <span className={`w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0 ${
-                        task.status === "Done" ? "border-[#CDA9EE] bg-[#CDA9EE]" : "border-black/10 bg-transparent"
-                      }`}>
-                        {task.status === "Done" && (
-                          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                          </svg>
-                        )}
-                      </span>
-                      <span className={`text-sm flex-1 ${task.status === "Done" ? "text-black/30 line-through" : "text-black/70"}`}>
-                        {task.title}
-                      </span>
-                      <span className={`text-[10px] font-semibold rounded-full px-2.5 py-0.5 ${task.tagColor}`}>
-                        {task.tag}
-                      </span>
+              )}
+
+              {/* Packages tab */}
+              {activeTab === "packages" && (
+                <div className="select-none">
+                  <div className="flex items-center justify-between mb-6">
+                    <h4 className="text-sm font-semibold text-black tracking-tight">Monorepo Packages</h4>
+                    <span className="text-[11px] text-black/30">4 packages</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="rounded-[16px] bg-[#CDA9EE]/15 p-5">
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-sm font-bold text-black tracking-tight">@chatbot/core</p>
+                        <span className="text-[10px] font-semibold rounded-full px-2.5 py-0.5 bg-[#CDA9EE]/30 text-[#8B5EC0]">v0.1.0</span>
+                      </div>
+                      <p className="text-xs text-black/40 leading-relaxed">Types, context engine, state management, error handling, and utilities.</p>
+                      <p className="text-[11px] text-black/25 mt-3">19 source files</p>
                     </div>
-                  ))}
+                    <div className="rounded-[16px] bg-[#FFD696]/20 p-5">
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-sm font-bold text-black tracking-tight">@chatbot/providers</p>
+                        <span className="text-[10px] font-semibold rounded-full px-2.5 py-0.5 bg-[#FFD696]/30 text-[#B8862D]">v0.1.0</span>
+                      </div>
+                      <p className="text-xs text-black/40 leading-relaxed">Google Gemini and Perplexity Sonar AI provider adapters.</p>
+                      <p className="text-[11px] text-black/25 mt-3">7 source files</p>
+                    </div>
+                    <div className="rounded-[16px] bg-[#A4C1EE]/20 p-5">
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-sm font-bold text-black tracking-tight">@chatbot/ui</p>
+                        <span className="text-[10px] font-semibold rounded-full px-2.5 py-0.5 bg-[#A4C1EE]/30 text-[#5B8BC9]">v0.1.0</span>
+                      </div>
+                      <p className="text-xs text-black/40 leading-relaxed">22 components, 3 hooks, and a CSS variable theme system.</p>
+                      <p className="text-[11px] text-black/25 mt-3">33 source files</p>
+                    </div>
+                    <div className="rounded-[16px] bg-[#CDA9EE]/15 p-5">
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-sm font-bold text-black tracking-tight">demo</p>
+                        <span className="text-[10px] font-semibold rounded-full px-2.5 py-0.5 bg-[#CDA9EE]/30 text-[#8B5EC0]">v0.1.0</span>
+                      </div>
+                      <p className="text-xs text-black/40 leading-relaxed">Next.js 15 demo app with 3 pages and API route handler.</p>
+                      <p className="text-[11px] text-black/25 mt-3">9 source files</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Settings tab */}
+              {activeTab === "settings" && (
+                <div className="select-none">
+                  {/* Provider section */}
+                  <div className="mb-6">
+                    <h4 className="text-sm font-semibold text-black tracking-tight mb-4">Provider</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="rounded-[16px] bg-[#CDA9EE]/15 border border-[#CDA9EE]/20 p-4 flex items-center gap-3">
+                        <span className="w-8 h-8 rounded-lg bg-[#CDA9EE] flex items-center justify-center flex-shrink-0">
+                          <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" />
+                          </svg>
+                        </span>
+                        <div className="flex-1">
+                          <p className="text-xs font-semibold text-black tracking-tight">Google Gemini</p>
+                          <p className="text-[11px] text-black/30">gemini-2.0-flash</p>
+                        </div>
+                        <span className="w-8 h-4 rounded-full bg-[#CDA9EE] relative">
+                          <span className="absolute right-0.5 top-0.5 w-3 h-3 rounded-full bg-white" />
+                        </span>
+                      </div>
+                      <div className="rounded-[16px] bg-black/[0.02] border border-black/5 p-4 flex items-center gap-3">
+                        <span className="w-8 h-8 rounded-lg bg-black/5 flex items-center justify-center flex-shrink-0">
+                          <svg className="w-4 h-4 text-black/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                          </svg>
+                        </span>
+                        <div className="flex-1">
+                          <p className="text-xs font-semibold text-black/30 tracking-tight">Perplexity Sonar</p>
+                          <p className="text-[11px] text-black/20">sonar</p>
+                        </div>
+                        <span className="w-8 h-4 rounded-full bg-black/10 relative">
+                          <span className="absolute left-0.5 top-0.5 w-3 h-3 rounded-full bg-white" />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Theme section */}
+                  <div className="mb-6">
+                    <h4 className="text-sm font-semibold text-black tracking-tight mb-4">Theme</h4>
+                    <div className="rounded-[16px] bg-[#F6F1E8]/60 border border-black/5 p-4 flex items-center gap-4">
+                      <div className="flex items-center gap-2 rounded-xl bg-white border border-black/5 px-4 py-2.5 flex-1">
+                        <svg className="w-4 h-4 text-[#FFD696]" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" />
+                        </svg>
+                        <span className="text-xs font-semibold text-black/70">Light</span>
+                      </div>
+                      <div className="flex items-center gap-2 rounded-xl px-4 py-2.5 flex-1">
+                        <svg className="w-4 h-4 text-black/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+                        </svg>
+                        <span className="text-xs text-black/30">Dark</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* API Endpoint section */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-black tracking-tight mb-4">API Endpoint</h4>
+                    <div className="rounded-[16px] bg-[#F6F1E8]/60 border border-black/5 p-4">
+                      <div className="rounded-xl bg-white border border-black/5 px-4 py-2.5 flex items-center gap-2">
+                        <svg className="w-4 h-4 text-black/20 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+                        </svg>
+                        <span className="text-xs text-black/40 font-mono">/api/chat</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -343,27 +516,67 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="rounded-[24px] bg-black p-8 md:p-12">
-          <div className="flex flex-col lg:flex-row items-center justify-center gap-3 lg:gap-0">
+        <div className="rounded-[24px] bg-black p-6 md:p-10">
+          {/* Flow indicator */}
+          <div className="flex items-center justify-center gap-2 mb-8">
             {ARCH_BOXES.map((box, i) => (
-              <div key={box.label} className="flex flex-col lg:flex-row items-center">
-                <div className={`rounded-[16px] ${box.color} border px-6 py-4 text-center min-w-[150px]`}>
-                  <p className="text-sm font-semibold text-white tracking-tight">{box.label}</p>
-                  <p className="text-[11px] text-white/40 mt-0.5">{box.sub}</p>
-                </div>
+              <div key={box.label} className="flex items-center gap-2">
+                <span className="text-[11px] text-white/40 font-medium whitespace-nowrap">{box.label}</span>
                 {i < ARCH_BOXES.length - 1 && (
-                  <>
-                    <div className="hidden lg:flex items-center px-1.5">
-                      <div className="w-5 h-px bg-white/20" />
-                      <svg className="w-2.5 h-2.5 text-white/20 -ml-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div className="flex lg:hidden items-center py-1">
-                      <div className="h-3 w-px bg-white/20" />
-                    </div>
-                  </>
+                  <svg className="w-3 h-3 text-white/20 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                  </svg>
                 )}
+              </div>
+            ))}
+          </div>
+
+          {/* Top row — 3 cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+            {ARCH_BOXES.slice(0, 3).map((box) => (
+              <div key={box.label} className={`rounded-[16px] ${box.color} border p-5`}>
+                <div className="flex items-center justify-between gap-3 mb-1">
+                  <div>
+                    <p className="text-sm font-semibold text-white tracking-tight">{box.label}</p>
+                    <p className="text-[11px] text-white/40 mt-0.5">{box.sub}</p>
+                  </div>
+                  <span className="rounded-full bg-white/10 text-[10px] text-white/50 px-2.5 py-1 whitespace-nowrap flex-shrink-0">{box.files}</span>
+                </div>
+                <div className="mt-3 space-y-1">
+                  {box.details.map((d) => (
+                    <p key={d} className="text-[11px] text-white/30 leading-relaxed">· {d}</p>
+                  ))}
+                </div>
+                <div className="flex flex-wrap gap-1.5 mt-3">
+                  {box.badges.map((b) => (
+                    <span key={b} className="rounded-full bg-white/10 text-[10px] text-white/40 px-2.5 py-0.5">{b}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Bottom row — 2 cards centered */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {ARCH_BOXES.slice(3).map((box) => (
+              <div key={box.label} className={`rounded-[16px] ${box.color} border p-5 w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.67rem)]`}>
+                <div className="flex items-center justify-between gap-3 mb-1">
+                  <div>
+                    <p className="text-sm font-semibold text-white tracking-tight">{box.label}</p>
+                    <p className="text-[11px] text-white/40 mt-0.5">{box.sub}</p>
+                  </div>
+                  <span className="rounded-full bg-white/10 text-[10px] text-white/50 px-2.5 py-1 whitespace-nowrap flex-shrink-0">{box.files}</span>
+                </div>
+                <div className="mt-3 space-y-1">
+                  {box.details.map((d) => (
+                    <p key={d} className="text-[11px] text-white/30 leading-relaxed">· {d}</p>
+                  ))}
+                </div>
+                <div className="flex flex-wrap gap-1.5 mt-3">
+                  {box.badges.map((b) => (
+                    <span key={b} className="rounded-full bg-white/10 text-[10px] text-white/40 px-2.5 py-0.5">{b}</span>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
@@ -380,7 +593,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-6 justify-center items-start">
+        <div className="flex flex-col md:flex-row gap-6 justify-center items-start pointer-events-none select-none">
           {/* Light */}
           <div className="flex-1 max-w-xs mx-auto md:mx-0">
             <p className="text-xs font-semibold text-black/30 tracking-[0.15em] uppercase mb-3 text-center">Light</p>
@@ -459,15 +672,7 @@ export default function Home() {
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#CDA9EE]" />
             ai
           </a>
-          <div className="flex items-center gap-6">
-            <a href="/ecommerce" className="text-sm text-black/30 hover:text-black transition-colors tracking-wide">
-              E-Commerce Demo
-            </a>
-            <a href="/portfolio" className="text-sm text-black/30 hover:text-black transition-colors tracking-wide">
-              Portfolio Demo
-            </a>
-          </div>
-          <p className="text-xs text-black/20 tracking-wide">&copy; 2025 chatbot.ai</p>
+          <p className="text-xs text-black/20 tracking-wide">&copy; 2026 chatbot.ai</p>
         </div>
       </footer>
     </div>

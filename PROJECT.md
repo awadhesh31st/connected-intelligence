@@ -443,12 +443,13 @@ Next.js 15 application with a SaaS landing page and two integration demos.
 
 #### Landing Page (`/`)
 
-Modern SaaS marketing page promoting the chatbot package with:
-- **Design**: Soft green gradient background, glassmorphism cards, purple+green glow accents, animated gradient blobs
-- **Sections**: Navbar (animated logo), Hero (headline + simulated chat card with ProductCard/SourceCard mockups), Feature Cards (3-column: Context Engine, Monorepo Architecture, Multi-Provider AI), Architecture diagram (dark glass card with CSS-only block diagram), Key Features Grid (2x3), Theme System (light/dark previews), Footer
-- **Colors**: Primary text `#14002E`, accent `#1B0033`, secondary `#8A8A8A`, surface `#F5F5F5`
-- **Animations**: `landing-float`, `landing-pulse-glow`, `landing-gradient-spin`, `landing-fade-in-up`, `landing-typing-cursor`
-- **Static page**: No ChatWidget integration, all chat UI is simulated mockups
+Premium SaaS marketing page with **Zona Pro-inspired soft pastel theme**:
+- **Design**: Soft cream background (`#F6F1E8`), rounded 20–24px cards, subtle diffused shadows, clean geometric typography with tight tracking
+- **Color palette**: Lavender `#CDA9EE`, Blue `#A4C1EE`, Yellow `#FFD696`, Black `#000`, Cream `#F6F1E8`
+- **Sections**: Sticky navbar (Features/Architecture/Demo nav links), dark gradient hero (headline + "Try Live Demo" CTA → `/ecommerce` + floating chat preview), 2x3 pastel feature cards (6 capabilities), interactive dashboard preview (tabbed sidebar: Dashboard/Packages/Settings with switchable content), architecture diagram (black card with flow indicator + 3+2 grid of expanded detail cards showing file counts, capabilities, and tech badges), theme preview (light/dark chat mockups + config snippet), horizontal footer (demo links + copyright 2026)
+- **Animations**: No custom keyframe animations — all motion via Tailwind `transition-*` utilities
+- **Interactive elements**: Dashboard Preview sidebar tabs switch between Dashboard (KPI + tasks), Packages (4 monorepo package cards), and Settings (provider/theme/endpoint mockups) via `useState`
+- **Static mockups**: Hero chat preview, dashboard tab content, and theme preview are decorative (`pointer-events-none select-none`)
 - **Non-functional links**: "Docs" nav link and "Get Started" button are disabled with "Coming Soon" tooltips
 
 #### E-Commerce Demo (`/ecommerce`)
@@ -458,6 +459,7 @@ Modern SaaS marketing page promoting the chatbot package with:
 - **Content**: Product grid with 6 tech products
 - **Features**: Floating `ChatWidget` for shopping assistance
 - **Context**: Product recommendations, pricing, comparisons
+- **Navigation**: "← Back to home" link → `/`
 - **Non-functional links**: "Deals" and "Support" nav links are disabled with "Coming Soon" tooltips
 
 #### Portfolio Demo (`/portfolio`)
@@ -467,7 +469,8 @@ Modern SaaS marketing page promoting the chatbot package with:
 - **Content**: Hero section, skills grid, project cards, contact section
 - **Features**: Floating `ChatWidget` for portfolio exploration
 - **Context**: Projects, skills, experience, contact info
-- **Non-functional links**: Email, GitHub, and LinkedIn contact links are disabled with "Demo Only" tooltips (dummy data)
+- **Navigation**: "← Back to home" link → `/`
+- **Contact links**: Email (mailto:awadhesh31st@gmail.com), GitHub (github.com/awadhesh31st), LinkedIn (linkedin.com/in/kawadhe/) — all functional, open in new tab
 
 #### API Route (`/api/chat`)
 
@@ -578,15 +581,7 @@ const config: ChatbotConfig = {
 | `chatbot-slide-up` | `animate-chatbot-slide-up` | 300ms slide-up with fade |
 | `chatbot-bounce` | `animate-chatbot-bounce` | 1.4s infinite bounce (loading dots) |
 
-**Landing page animations:**
-
-| Animation | Class | Description |
-|-----------|-------|-------------|
-| `landing-float` | `animate-landing-float` | 6s infinite vertical bob (gradient blobs) |
-| `landing-pulse-glow` | `animate-landing-pulse-glow` | 4s infinite scale+opacity (glow accents) |
-| `landing-gradient-spin` | `animate-landing-gradient-spin` | 8s linear rotation (logo dot) |
-| `landing-fade-in-up` | `animate-landing-fade-in-up` | 0.6s entrance with translateY |
-| `landing-typing-cursor` | `animate-landing-typing-cursor` | 1s infinite blink (simulated chat cursor) |
+The landing page (Zona Pro pastel theme) uses no custom keyframe animations — all motion is via Tailwind's built-in `transition-*` utilities.
 
 ---
 
