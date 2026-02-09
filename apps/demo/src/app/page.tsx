@@ -136,13 +136,14 @@ const DASHBOARD_TASKS = [
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"dashboard" | "packages" | "settings">("dashboard");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#F6F1E8]">
 
       {/* ── Navbar ── */}
       <nav className="sticky top-0 z-50 bg-[#F6F1E8]/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 py-4 sm:py-5">
           <a href="/" className="text-lg font-bold tracking-tight text-black flex items-center gap-1">
             chatbot
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#CDA9EE]" />
@@ -166,20 +167,63 @@ export default function Home() {
             )}
           </div>
 
-          <span className="relative group">
-            <button disabled className="rounded-full bg-black/5 text-black/30 px-5 py-2 text-sm font-medium cursor-not-allowed tracking-wide">
-              Get Started
-            </button>
-            <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 text-[10px] text-white bg-black rounded-lg px-2 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-              Coming Soon
+          <div className="flex items-center gap-3">
+            <span className="relative group hidden sm:inline-block">
+              <button disabled className="rounded-full bg-black/5 text-black/30 px-5 py-2 text-sm font-medium cursor-not-allowed tracking-wide">
+                Get Started
+              </button>
+              <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 text-[10px] text-white bg-black rounded-lg px-2 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                Coming Soon
+              </span>
             </span>
-          </span>
+
+            {/* Mobile hamburger */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 -mr-2 text-black/50 hover:text-black transition-colors"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? (
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile dropdown menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-black/5 bg-[#F6F1E8]/95 backdrop-blur-md px-4 pb-4 pt-2">
+            <div className="flex flex-col gap-1">
+              {NAV_LINKS.map((link) =>
+                link.href ? (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-sm text-black/60 hover:text-black px-3 py-2.5 rounded-xl hover:bg-black/[0.03] transition-colors tracking-wide"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <span key={link.label} className="text-sm text-black/25 px-3 py-2.5 tracking-wide">
+                    {link.label} <span className="text-[10px] ml-1 text-black/20">(Coming Soon)</span>
+                  </span>
+                )
+              )}
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* ── Hero Section — Dark ── */}
-      <section className="mx-4 md:mx-6 lg:mx-auto lg:max-w-6xl rounded-[24px] bg-gradient-to-br from-black via-[#111] to-[#1a1a1a] overflow-hidden">
-        <div className="relative px-8 md:px-16 py-20 md:py-28 lg:py-32">
+      <section className="mx-3 sm:mx-4 md:mx-6 lg:mx-auto lg:max-w-6xl rounded-[20px] sm:rounded-[24px] bg-gradient-to-br from-black via-[#111] to-[#1a1a1a] overflow-hidden">
+        <div className="relative px-5 sm:px-8 md:px-16 py-14 sm:py-20 md:py-28 lg:py-32">
           {/* Subtle gradient orbs */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
             <div className="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full bg-[#CDA9EE]/10 blur-3xl" />
@@ -187,7 +231,7 @@ export default function Home() {
           </div>
 
           <div className="relative z-10 max-w-2xl">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight">
               The modern way
               <br />
               to build
@@ -199,10 +243,10 @@ export default function Home() {
               A modular Turborepo package with context-aware intelligence. Drop it into any Next.js app and ship in minutes.
             </p>
 
-            <div className="flex items-center gap-4 mt-10">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mt-8 sm:mt-10">
               <Link
                 href="/portfolio"
-                className="inline-flex items-center gap-2 rounded-full bg-[#CDA9EE] text-black px-7 py-3.5 text-sm font-semibold tracking-wide hover:bg-[#c49de8] transition-colors"
+                className="inline-flex items-center gap-2 rounded-full bg-[#CDA9EE] text-black px-6 sm:px-7 py-3 sm:py-3.5 text-sm font-semibold tracking-wide hover:bg-[#c49de8] transition-colors"
               >
                 Try Live Demo
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -253,7 +297,7 @@ export default function Home() {
       </section>
 
       {/* ── Features Section ── */}
-      <section id="features" className="mx-auto max-w-6xl px-6 py-20 md:py-28">
+      <section id="features" className="mx-auto max-w-6xl px-4 sm:px-6 py-14 sm:py-20 md:py-28">
         <div className="text-center mb-14">
           <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase text-black/30 mb-3">Capabilities</span>
           <h2 className="text-3xl md:text-4xl font-bold text-black tracking-tight">Everything you need</h2>
@@ -279,7 +323,7 @@ export default function Home() {
       </section>
 
       {/* ── Dashboard Preview Section ── */}
-      <section className="mx-4 md:mx-6 lg:mx-auto lg:max-w-6xl mb-20">
+      <section className="mx-3 sm:mx-4 md:mx-6 lg:mx-auto lg:max-w-6xl mb-14 sm:mb-20">
         <div className="rounded-[24px] bg-white border border-black/5 shadow-[0_4px_40px_rgba(0,0,0,0.03)] overflow-hidden">
           <div className="flex flex-col lg:flex-row">
             {/* Sidebar */}
@@ -507,7 +551,7 @@ export default function Home() {
       </section>
 
       {/* ── Architecture Section ── */}
-      <section id="architecture" className="mx-auto max-w-6xl px-6 pb-20 md:pb-28">
+      <section id="architecture" className="mx-auto max-w-6xl px-4 sm:px-6 pb-14 sm:pb-20 md:pb-28">
         <div className="text-center mb-14">
           <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase text-black/30 mb-3">Under the Hood</span>
           <h2 className="text-3xl md:text-4xl font-bold text-black tracking-tight">Clean Architecture</h2>
@@ -516,9 +560,9 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="rounded-[24px] bg-black p-6 md:p-10">
-          {/* Flow indicator */}
-          <div className="flex items-center justify-center gap-2 mb-8">
+        <div className="rounded-[20px] sm:rounded-[24px] bg-black p-4 sm:p-6 md:p-10">
+          {/* Flow indicator — hidden on mobile, shown on lg+ */}
+          <div className="hidden lg:flex items-center justify-center gap-2 mb-8">
             {ARCH_BOXES.map((box, i) => (
               <div key={box.label} className="flex items-center gap-2">
                 <span className="text-[11px] text-white/40 font-medium whitespace-nowrap">{box.label}</span>
@@ -584,7 +628,7 @@ export default function Home() {
       </section>
 
       {/* ── Theme Preview Section ── */}
-      <section className="mx-auto max-w-6xl px-6 pb-20 md:pb-28">
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 pb-14 sm:pb-20 md:pb-28">
         <div className="text-center mb-14">
           <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase text-black/30 mb-3">Theming</span>
           <h2 className="text-3xl md:text-4xl font-bold text-black tracking-tight">Runtime Theme Switching</h2>
@@ -593,9 +637,9 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-6 justify-center items-start pointer-events-none select-none">
+        <div className="flex flex-col sm:flex-row gap-6 justify-center items-stretch pointer-events-none select-none">
           {/* Light */}
-          <div className="flex-1 max-w-xs mx-auto md:mx-0">
+          <div className="flex-1 max-w-xs mx-auto sm:mx-0">
             <p className="text-xs font-semibold text-black/30 tracking-[0.15em] uppercase mb-3 text-center">Light</p>
             <div className="rounded-[20px] bg-white border border-black/5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] overflow-hidden">
               <div className="flex items-center gap-2 px-4 py-3 border-b border-black/5">
@@ -621,7 +665,7 @@ export default function Home() {
           </div>
 
           {/* Dark */}
-          <div className="flex-1 max-w-xs mx-auto md:mx-0">
+          <div className="flex-1 max-w-xs mx-auto sm:mx-0">
             <p className="text-xs font-semibold text-black/30 tracking-[0.15em] uppercase mb-3 text-center">Dark</p>
             <div className="rounded-[20px] bg-[#111] border border-white/5 shadow-[0_4px_20px_rgba(0,0,0,0.1)] overflow-hidden">
               <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5">
@@ -648,7 +692,7 @@ export default function Home() {
         </div>
 
         {/* Config snippet */}
-        <pre className="mx-auto max-w-lg mt-10 rounded-[16px] bg-[#1a1a1a] text-white/50 p-6 text-sm overflow-x-auto border border-white/5">
+        <pre className="mx-auto max-w-lg mt-8 sm:mt-10 rounded-[16px] bg-[#1a1a1a] text-white/50 p-4 sm:p-6 text-xs sm:text-sm overflow-x-auto border border-white/5">
           <code>
 {`const config: ChatbotConfig = {
   theme: {
@@ -665,7 +709,7 @@ export default function Home() {
       </section>
 
       {/* ── Footer ── */}
-      <footer id="demo" className="mx-auto max-w-6xl px-6 pb-12 pt-8 border-t border-black/5">
+      <footer id="demo" className="mx-auto max-w-6xl px-4 sm:px-6 pb-8 sm:pb-12 pt-6 sm:pt-8 border-t border-black/5">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <a href="/" className="text-base font-bold text-black tracking-tight flex items-center gap-1">
             chatbot
