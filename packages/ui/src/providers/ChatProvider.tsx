@@ -16,10 +16,12 @@ interface ChatContextValue {
   status: ChatStatus;
   isLoading: boolean;
   error: Error | undefined;
+  errorDismissed: boolean;
   setInput: (input: string) => void;
   sendMessage: (text: string) => void;
   regenerate: () => void;
   stop: () => void;
+  dismissError: () => void;
   config: ChatbotConfig;
   systemPrompt: string;
 }
@@ -42,6 +44,7 @@ interface ChatProviderProps {
 export function ChatProvider({ config, children }: ChatProviderProps) {
   const chatState = useChatState({ config });
   const [input, setInput] = useState("");
+  const [errorDismissed, setErrorDismissed] = useState(false);
 
   const transport = useMemo(
     () =>
@@ -66,13 +69,19 @@ export function ChatProvider({ config, children }: ChatProviderProps) {
       });
     },
     onError: (error) => {
+      setErrorDismissed(false);
       config.hooks?.onError?.(error);
     },
   });
 
+  const dismissError = useCallback(() => {
+    setErrorDismissed(true);
+  }, []);
+
   const sendMessage = useCallback(
     (text: string) => {
       if (!text.trim()) return;
+      setErrorDismissed(false);
       config.hooks?.onMessageSend?.(text);
       chat.sendMessage({ text });
       setInput("");
@@ -89,14 +98,19 @@ export function ChatProvider({ config, children }: ChatProviderProps) {
       status: chat.status as ChatStatus,
       isLoading,
       error: chat.error,
+      errorDismissed,
       setInput,
       sendMessage,
-      regenerate: () => chat.regenerate(),
+      regenerate: () => {
+        setErrorDismissed(false);
+        chat.regenerate();
+      },
       stop: () => chat.stop(),
+      dismissError,
       config,
       systemPrompt: chatState.systemPrompt,
     }),
-    [chat.messages, chat.status, chat.error, input, isLoading, sendMessage, chat, config, chatState.systemPrompt]
+    [chat.messages, chat.status, chat.error, errorDismissed, input, isLoading, sendMessage, dismissError, chat, config, chatState.systemPrompt]
   );
 
   return (

@@ -39,40 +39,92 @@ const contexts: Record<string, ContextEngine> = {
 };
 
 export async function POST(request: Request) {
-  const body = await request.json();
-  const {
-    messages,
-    providerId = "google",
-    modelId = "gemini-2.0-flash",
-    contextType = "ecommerce",
-  } = body as {
-    messages: UIMessage[];
-    providerId?: string;
-    modelId?: string;
-    contextType?: string;
-  };
+  try {
+    const body = await request.json();
+    const {
+      messages,
+      providerId = "google",
+      modelId = "gemini-2.0-flash",
+      contextType = "ecommerce",
+    } = body as {
+      messages: UIMessage[];
+      providerId?: string;
+      modelId?: string;
+      contextType?: string;
+    };
 
-  // Get context engine
-  const contextEngine = contexts[contextType] ?? contexts.ecommerce;
-  const systemPrompt = contextEngine.buildSystemPrompt();
+    if (!messages?.length) {
+      return Response.json(
+        { error: "No messages provided." },
+        { status: 400 }
+      );
+    }
 
-  // Create model from provider registry
-  const model = registry.createModel({
-    providerId,
-    modelId,
-    apiKey:
+    const apiKey =
       providerId === "google"
         ? process.env.GOOGLE_GENERATIVE_AI_API_KEY
-        : process.env.PERPLEXITY_API_KEY,
-  });
+        : process.env.PERPLEXITY_API_KEY;
 
-  const modelMessages = await convertToModelMessages(messages);
+    if (!apiKey) {
+      return Response.json(
+        { error: "The AI provider is not configured. Please check the API key." },
+        { status: 503 }
+      );
+    }
 
-  const result = streamText({
-    model,
-    system: systemPrompt,
-    messages: modelMessages,
-  });
+    // Get context engine
+    const contextEngine = contexts[contextType] ?? contexts.ecommerce;
+    const systemPrompt = contextEngine.buildSystemPrompt();
 
-  return result.toUIMessageStreamResponse();
+    // Create model from provider registry
+    const model = registry.createModel({
+      providerId,
+      modelId,
+      apiKey,
+    });
+
+    const modelMessages = await convertToModelMessages(messages);
+
+    const result = streamText({
+      model,
+      system: systemPrompt,
+      messages: modelMessages,
+    });
+
+    return result.toUIMessageStreamResponse();
+  } catch (err) {
+    const message =
+      err instanceof Error ? err.message : "An unexpected error occurred.";
+
+    // Map known error patterns to appropriate status codes
+    const lowerMsg = message.toLowerCase();
+    if (lowerMsg.includes("rate limit") || lowerMsg.includes("quota")) {
+      return Response.json(
+        { error: "Too many requests. Please wait a moment and try again." },
+        { status: 429 }
+      );
+    }
+    if (
+      lowerMsg.includes("api key") ||
+      lowerMsg.includes("unauthorized") ||
+      lowerMsg.includes("authentication")
+    ) {
+      return Response.json(
+        { error: "Authentication failed. Please check the API configuration." },
+        { status: 401 }
+      );
+    }
+    if (lowerMsg.includes("not found") || lowerMsg.includes("invalid model")) {
+      return Response.json(
+        { error: `Model or provider not found: ${message}` },
+        { status: 404 }
+      );
+    }
+
+    console.error("[chat/route] Unhandled error:", err);
+    return Response.json(
+      { error: "Something went wrong. Please try again." },
+      { status: 500 }
+    );
+  }
 }
