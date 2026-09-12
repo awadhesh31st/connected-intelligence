@@ -6,6 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
   return [
     { url: `${BASE_URL}/`, lastModified },
+    { url: `${BASE_URL}/products`, lastModified },
     { url: `${BASE_URL}/ecommerce`, lastModified },
     { url: `${BASE_URL}/portfolio`, lastModified },
   ];
