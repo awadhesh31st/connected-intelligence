@@ -5,17 +5,25 @@ import Link from "next/link";
 import { ChatWidget } from "@chatbot/ui";
 import { ecommerceConfig } from "@/contexts/ecommerce-config";
 import { products } from "@/lib/demo-data";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function EcommerceClient() {
   return (
     <div className="min-h-screen bg-amber-50">
-      {/* Header */}
-      <header className="border-b border-amber-200 bg-white">
+      <SiteHeader />
+      <Breadcrumbs
+        items={[{ label: "Home", href: "/" }, { label: "Products", href: "/products" }, { label: "TechStore Demo" }]}
+      />
+
+      {/* Local demo bar */}
+      <header className="border-b border-amber-200 bg-white mt-4">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link href="/" className="text-2xl font-bold text-amber-900">TechStore</Link>
-          <nav className="flex gap-6 text-sm text-amber-700">
-            <a href="#products" className="hover:text-amber-900">Products</a>
-          </nav>
+          <span className="text-2xl font-bold text-amber-900">TechStore</span>
+          <span className="text-xs font-semibold uppercase tracking-wider rounded-full px-2.5 py-1 bg-amber-100 text-amber-700">
+            Chatbot Widget Demo
+          </span>
         </div>
       </header>
 
@@ -25,9 +33,9 @@ export default function EcommerceClient() {
         <p className="text-amber-700 mb-2">
           Use the chat assistant to find the perfect product for you
         </p>
-        <Link href="/" className="text-amber-600 text-sm hover:underline">
-          ← Back to home
-        </Link>
+        <a href="#products" className="text-amber-600 text-sm hover:underline">
+          See products below
+        </a>
       </section>
 
       {/* Product Grid */}
@@ -66,6 +74,8 @@ export default function EcommerceClient() {
           ))}
         </div>
       </section>
+
+      <SiteFooter />
 
       {/* Chat Widget */}
       <ChatWidget config={ecommerceConfig} />

@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { ChatWidget } from "@chatbot/ui";
 import { portfolioConfig } from "@/contexts/portfolio-config";
 import { projects, portfolioOwner } from "@/lib/demo-data";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 /* ─────────────── Types ─────────────── */
 
@@ -89,31 +91,27 @@ export default function PortfolioClient({ initialRepos }: PortfolioClientProps) 
 
   return (
     <div className="min-h-screen bg-[#F6F1E8]">
-      {/* ── Navbar ── */}
-      <nav className="sticky top-0 z-50 bg-[#F6F1E8]/80 backdrop-blur-md border-b border-black/5">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <span className="text-lg font-bold tracking-tight text-black">
+      <SiteHeader />
+      <Breadcrumbs
+        items={[{ label: "Home", href: "/" }, { label: "Products", href: "/products" }, { label: "Portfolio Demo" }]}
+      />
+
+      {/* ── In-page section nav ── */}
+      {/* Horizontally scrollable (not `hidden` below md) so it's reachable on mobile too. */}
+      <nav className="bg-[#F6F1E8]/95 backdrop-blur-md border-b border-black/5">
+        <div className="mx-auto flex max-w-6xl items-center gap-6 px-6 py-3 overflow-x-auto">
+          <span className="text-sm font-semibold tracking-tight text-black/70 whitespace-nowrap">
             {portfolioOwner.name}
           </span>
-
-          <div className="hidden md:flex items-center gap-8">
-            {NAV_ITEMS.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="text-sm text-black/50 hover:text-black transition-colors tracking-wide"
-              >
-                {item.label}
-              </a>
-            ))}
-          </div>
-
-          <Link
-            href="/"
-            className="text-sm text-black/40 hover:text-black transition-colors tracking-wide"
-          >
-            &larr; Home
-          </Link>
+          {NAV_ITEMS.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className="text-sm text-black/50 hover:text-black transition-colors tracking-wide whitespace-nowrap"
+            >
+              {item.label}
+            </a>
+          ))}
         </div>
       </nav>
 
@@ -619,16 +617,12 @@ export default function PortfolioClient({ initialRepos }: PortfolioClientProps) 
       </section>
 
       {/* ── Footer ── */}
-      <footer className="mx-auto max-w-6xl px-6 pb-12 pt-8 border-t border-black/5">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="text-base font-bold text-black tracking-tight">
-            {portfolioOwner.name}
-          </span>
-          <p className="text-xs text-black/20 tracking-wide">
-            &copy; {new Date().getFullYear()} {portfolioOwner.name}. All rights reserved.
-          </p>
-        </div>
-      </footer>
+      <div className="mx-auto max-w-6xl px-6 pt-2">
+        <p className="text-xs text-black/20 tracking-wide text-center sm:text-left">
+          &copy; {new Date().getFullYear()} {portfolioOwner.name}. All rights reserved.
+        </p>
+      </div>
+      <SiteFooter />
 
       {/* Chat Widget */}
       <ChatWidget config={portfolioConfig} />
