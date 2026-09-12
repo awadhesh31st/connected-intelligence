@@ -53,4 +53,4 @@ pnpm dev      # everything in watch mode, demo app at localhost:3000
 pnpm build    # build all packages + apps
 ```
 
-Add API keys to `apps/demo/.env.local` (`GOOGLE_GENERATIVE_AI_API_KEY`, `PERPLEXITY_API_KEY`) before running. See `apps/extension/README.md` for the extension's own setup.
+Copy `apps/demo/.env.example` to `apps/demo/.env.local` and fill in `GOOGLE_GENERATIVE_AI_API_KEY` and `PERPLEXITY_API_KEY` before running. `NEXT_PUBLIC_SITE_URL` is optional in development — set it in production (e.g. to a custom domain) so `metadataBase`, `sitemap.xml`, and `robots.txt` all resolve to the right domain instead of the Vercel preview URL. See `apps/extension/README.md` for the extension's own setup.
