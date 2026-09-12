@@ -2,6 +2,23 @@
 
 Dated, most recent first. Each entry is a short record of what changed, why, and any trade-offs worth remembering. Kept separate from the root `README.md` so that file can stay a pure repository overview.
 
+### 2026-09-13 — Portfolio page redesign
+
+- Full content/structure/visual pass on `/portfolio`, not just colors/spacing. New flow: Hero → About → Skills → Experience → Projects → Contact (previously jumped straight from a stats grid into Skills, with Education and GitHub as disconnected afterthoughts near the bottom).
+- **New About section**: consolidates the existing `summary` paragraph, a quote from the current role's first bullet, and a "Quick Facts" card (current role, experience, specialization, education) — pulling education out of its own orphaned section and giving the page an actual narrative introduction, which it didn't have before.
+- **Hero**: trimmed to name/title/specialization badge + a one-line value statement (assembled only from the existing `title` and specialization label, not new claims), with the old separate 5-card "Highlights" section collapsed into three inline stat chips under the CTAs — removes a redundant, disconnected stop right after the hero.
+- **Skills**: added a distinct icon per category (reusing icon paths already established elsewhere on the site) and a hover lift + staggered scroll-reveal, instead of a flat colored-block grid.
+- **Experience**: same timeline structure, but each entry now reveals on scroll (staggered), the dot scales on hover, and the duration reads as a pill badge instead of plain text — no content removed or reworded, all bullets are verbatim.
+- **Projects** (the ask was to make this the strongest section): the first project (this repo's own demo) is now visually "Featured" — full-width dark card vs. the standard cards for the rest — plus a "Solo project · built end-to-end" tag and hover depth. No invented "problem solved" or "impact metrics" text was added since that's not in `demo-data.ts`; the existing `description` already carries that framing.
+- **GitHub repositories**: demoted from a full-weight section to a lighter, smaller "More on GitHub" strip (capped at 6 repos) directly under Projects, so Projects reads as the clear centerpiece instead of competing with a second, equally-sized project-like section.
+- **Contact**: restructured from four equal-weight cards to one primary "Send an Email" CTA plus a secondary row of Phone/LinkedIn/GitHub chips — clearer hierarchy, same links.
+- **Navigation**: the sticky secondary nav (Skills/Experience/Projects/Contact, built in an earlier pass) now shows the active section with an animated underline instead of only a color change. Left the nav's item list unchanged (no "About" link added) since the page-structure ask and the navigation ask both explicitly named the same four items.
+- **Accessibility**: added a global `a:focus-visible`/`button:focus-visible` outline in `globals.css` (keyboard-only, doesn't trigger on mouse clicks) — the whole demo app benefits, not just this page, since there was no visible focus state anywhere before.
+- No personal information was changed or invented — every fact (name, title, summary, skills, experience, education, projects, contact details) is unchanged from `demo-data.ts`; only its grouping, hierarchy, and presentation changed.
+- No routes or repository structure changed, so the root `README.md` was left as-is.
+
+Verified with a full Playwright pass: nav click → smooth-scroll → active-underline-update flow, all 34 on-page links (no broken/placeholder hrefs), reduced-motion content visibility, keyboard `Tab` focus producing a visible outline, and screenshots at 375px/768px/1280px confirming the hero, About, Skills, Projects, and Contact layouts are each intentionally arranged for their breakpoint rather than just shrunk.
+
 ### 2026-09-13 — Scalable Products architecture: catalog + data-driven detail pages
 
 - Replaced the single, monolithic `/products` page (cards + inline anchor-jump detail sections) with a real catalog architecture: `apps/demo/src/lib/products-data.tsx` defines a `Product` type (overview, how-it-works steps, features, use cases, getting-started, expectations, CTAs) and a `PRODUCTS` array. Adding a future product to the platform means adding one data entry — no new components or routes required.
