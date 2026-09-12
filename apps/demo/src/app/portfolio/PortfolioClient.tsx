@@ -60,6 +60,46 @@ export default function PortfolioClient({ initialRepos }: PortfolioClientProps) 
   const [repos, setRepos] = useState<GitHubRepo[]>(initialRepos ?? []);
   const [reposLoading, setReposLoading] = useState(initialRepos === null);
   const [reposError, setReposError] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("");
+
+  // Scroll-spy: highlight whichever section nav item matches the section
+  // currently at the top of the viewport (below the sticky header/nav bars).
+  useEffect(() => {
+    const sectionIds = NAV_ITEMS.map((item) => item.href.slice(1));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting);
+        if (visible.length === 0) return;
+        const topmost = visible.reduce((a, b) =>
+          a.boundingClientRect.top <= b.boundingClientRect.top ? a : b
+        );
+        setActiveSection(topmost.target.id);
+      },
+      { rootMargin: "-140px 0px -70% 0px", threshold: 0 }
+    );
+
+    const elements = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    elements.forEach((el) => observer.observe(el));
+
+    // Fallback for the last section: if it's shorter than the trailing
+    // footer whitespace, it can scroll past the observer's top band before
+    // the page reaches its true bottom, so it would never register as
+    // active. Force it active once the user has scrolled to the bottom.
+    const lastSectionId = sectionIds[sectionIds.length - 1];
+    function handleScroll() {
+      const atBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 150;
+      if (atBottom) setActiveSection(lastSectionId);
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const fetchRepos = () => {
     setReposLoading(true);
@@ -91,29 +131,42 @@ export default function PortfolioClient({ initialRepos }: PortfolioClientProps) 
 
   return (
     <div className="min-h-screen bg-[#F6F1E8]">
-      <SiteHeader />
+      <SiteHeader
+        secondary={
+          // Sticks to the same unit as the global header (see SiteHeader's
+          // `secondary` prop) so both bars scroll together without overlap.
+          // Horizontally scrollable, not `hidden` below md, so it's reachable
+          // on mobile too.
+          <nav
+            aria-label="Portfolio sections"
+            className="bg-[#F6F1E8]/95 backdrop-blur-md border-t border-black/5"
+          >
+            <div className="mx-auto flex max-w-6xl items-center gap-6 px-6 py-3 overflow-x-auto">
+              <span className="text-sm font-semibold tracking-tight text-black/70 whitespace-nowrap">
+                {portfolioOwner.name}
+              </span>
+              {NAV_ITEMS.map((item) => {
+                const active = activeSection === item.href.slice(1);
+                return (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    aria-current={active ? "location" : undefined}
+                    className={`text-sm transition-colors tracking-wide whitespace-nowrap ${
+                      active ? "text-black font-semibold" : "text-black/50 hover:text-black"
+                    }`}
+                  >
+                    {item.label}
+                  </a>
+                );
+              })}
+            </div>
+          </nav>
+        }
+      />
       <Breadcrumbs
         items={[{ label: "Home", href: "/" }, { label: "Products", href: "/products" }, { label: "Portfolio Demo" }]}
       />
-
-      {/* ── In-page section nav ── */}
-      {/* Horizontally scrollable (not `hidden` below md) so it's reachable on mobile too. */}
-      <nav className="bg-[#F6F1E8]/95 backdrop-blur-md border-b border-black/5">
-        <div className="mx-auto flex max-w-6xl items-center gap-6 px-6 py-3 overflow-x-auto">
-          <span className="text-sm font-semibold tracking-tight text-black/70 whitespace-nowrap">
-            {portfolioOwner.name}
-          </span>
-          {NAV_ITEMS.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              className="text-sm text-black/50 hover:text-black transition-colors tracking-wide whitespace-nowrap"
-            >
-              {item.label}
-            </a>
-          ))}
-        </div>
-      </nav>
 
       {/* ── Hero Section — Dark ── */}
       <section className="mx-4 md:mx-6 lg:mx-auto lg:max-w-6xl rounded-[24px] bg-gradient-to-br from-black via-[#111] to-[#1a1a1a] overflow-hidden mt-6">
@@ -256,7 +309,7 @@ export default function PortfolioClient({ initialRepos }: PortfolioClientProps) 
       </section>
 
       {/* ── Skills Section ── */}
-      <section id="skills" className="mx-auto max-w-6xl px-6 pb-20 md:pb-28">
+      <section id="skills" className="scroll-mt-[150px] mx-auto max-w-6xl px-6 pb-20 md:pb-28">
         <div className="text-center mb-14">
           <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase text-black/30 mb-3">
             Expertise
@@ -294,7 +347,7 @@ export default function PortfolioClient({ initialRepos }: PortfolioClientProps) 
       </section>
 
       {/* ── Experience Section ── */}
-      <section id="experience" className="mx-4 md:mx-6 lg:mx-auto lg:max-w-6xl rounded-[24px] bg-white border border-black/5 shadow-[0_4px_40px_rgba(0,0,0,0.03)] overflow-hidden mb-20">
+      <section id="experience" className="scroll-mt-[150px] mx-4 md:mx-6 lg:mx-auto lg:max-w-6xl rounded-[24px] bg-white border border-black/5 shadow-[0_4px_40px_rgba(0,0,0,0.03)] overflow-hidden mb-20">
         <div className="p-5 sm:p-8 md:p-12">
           <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase text-black/30 mb-3">
             Career
@@ -339,7 +392,7 @@ export default function PortfolioClient({ initialRepos }: PortfolioClientProps) 
       </section>
 
       {/* ── Projects Section ── */}
-      <section id="projects" className="mx-auto max-w-6xl px-6 pb-20 md:pb-28">
+      <section id="projects" className="scroll-mt-[150px] mx-auto max-w-6xl px-6 pb-20 md:pb-28">
         <div className="text-center mb-14">
           <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase text-black/30 mb-3">
             Work
@@ -544,7 +597,7 @@ export default function PortfolioClient({ initialRepos }: PortfolioClientProps) 
       </section>
 
       {/* ── Contact Section ── */}
-      <section id="contact" className="mx-auto max-w-6xl px-6 pb-20 md:pb-28">
+      <section id="contact" className="scroll-mt-[150px] mx-auto max-w-6xl px-6 pb-20 md:pb-28">
         <div className="text-center mb-14">
           <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase text-black/30 mb-3">
             Connect
