@@ -205,7 +205,18 @@ export default function PortfolioClient({ initialRepos }: PortfolioClientProps) 
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F6F1E8] animate-page-enter">
+    <div className="min-h-screen relative animate-page-enter">
+      {/* Atmospheric background: subtle, blurred brand-color orbs spread down
+          the full page height, sitting behind every section. Low opacity and
+          heavily blurred so it adds depth without competing with content —
+          opaque section backgrounds (white/black cards) simply paint over it. */}
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none bg-[#F6F1E8]" aria-hidden="true">
+        <div className="absolute top-[2%] left-[-12%] w-[380px] h-[380px] rounded-full bg-[#CDA9EE]/10 blur-[110px]" />
+        <div className="absolute top-[30%] right-[-14%] w-[420px] h-[420px] rounded-full bg-[#A4C1EE]/10 blur-[110px]" />
+        <div className="absolute top-[60%] left-[-10%] w-[360px] h-[360px] rounded-full bg-[#FFD696]/10 blur-[110px]" />
+        <div className="absolute bottom-[2%] right-[-10%] w-[300px] h-[300px] rounded-full bg-[#CDA9EE]/10 blur-[110px]" />
+      </div>
+
       <SiteHeader
         secondary={
           // Sticks to the same unit as the global header (see SiteHeader's
@@ -217,9 +228,12 @@ export default function PortfolioClient({ initialRepos }: PortfolioClientProps) 
             className="bg-[#F6F1E8]/95 backdrop-blur-md border-t border-black/5"
           >
             <div className="mx-auto flex max-w-6xl items-center gap-6 px-6 py-3 overflow-x-auto">
-              <span className="text-sm font-semibold tracking-tight text-black/70 whitespace-nowrap">
+              <a
+                href="#hero"
+                className="text-sm font-semibold tracking-tight text-black/70 hover:text-black transition-colors whitespace-nowrap"
+              >
                 {portfolioOwner.name}
-              </span>
+              </a>
               {NAV_ITEMS.map((item) => {
                 const active = activeSection === item.href.slice(1);
                 return (
@@ -246,7 +260,7 @@ export default function PortfolioClient({ initialRepos }: PortfolioClientProps) 
       />
 
       {/* ── Hero ── */}
-      <section className="mx-4 md:mx-6 lg:mx-auto lg:max-w-6xl rounded-[24px] bg-gradient-to-br from-black via-[#111] to-[#1a1a1a] overflow-hidden mt-6">
+      <section id="hero" className="mx-4 md:mx-6 lg:mx-auto lg:max-w-6xl rounded-[24px] bg-gradient-to-br from-black via-[#111] to-[#1a1a1a] overflow-hidden mt-6">
         <div className="relative px-5 sm:px-8 md:px-16 py-16 sm:py-20 md:py-28">
           {/* Gradient orbs */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
@@ -272,8 +286,8 @@ export default function PortfolioClient({ initialRepos }: PortfolioClientProps) 
                 </span>
               </div>
               <p className="mt-6 text-base md:text-lg text-white/40 max-w-lg leading-relaxed">
-                Senior Software Engineer specializing in AI-powered products and micro frontend
-                architecture — building scalable, high-quality interfaces that ship real impact.
+                Senior Software Engineer specializing in AI powered products and micro frontend
+                architecture — building scalable, high quality interfaces that ship real impact.
               </p>
 
               <div className="flex flex-wrap items-center gap-4 mt-10">
@@ -492,7 +506,7 @@ export default function PortfolioClient({ initialRepos }: PortfolioClientProps) 
           <SectionEyebrow>Work</SectionEyebrow>
           <h2 className="text-3xl md:text-4xl font-bold text-black tracking-tight">Featured Projects</h2>
           <p className="mt-3 text-base text-black/40 max-w-md mx-auto">
-            Personal projects — built, shipped, and maintained end-to-end.
+            Personal projects — built, shipped, and maintained end to end.
           </p>
         </Reveal>
 
@@ -532,7 +546,7 @@ export default function PortfolioClient({ initialRepos }: PortfolioClientProps) 
                     {project.description}
                   </p>
                   <p className={`text-xs font-medium mb-5 ${featured ? "text-white/30" : "text-black/30"}`}>
-                    Solo project &middot; built end-to-end
+                    Solo project &middot; built end to end
                   </p>
 
                   <div className="flex flex-wrap gap-1.5 mb-6">
@@ -589,7 +603,7 @@ export default function PortfolioClient({ initialRepos }: PortfolioClientProps) 
       <section className="mx-4 md:mx-6 lg:mx-auto lg:max-w-6xl mb-20">
         <Reveal className="rounded-[24px] bg-black/90 overflow-hidden">
           <div className="p-5 sm:p-8 md:p-10">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
               <div>
                 <span className="inline-block text-xs font-semibold tracking-[0.2em] uppercase text-white/30 mb-2">
                   Open Source
@@ -600,7 +614,7 @@ export default function PortfolioClient({ initialRepos }: PortfolioClientProps) 
                 href={portfolioOwner.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hidden sm:inline-flex items-center gap-2 rounded-full border border-white/20 text-white/50 px-4 py-2 text-xs font-medium hover:border-white/40 hover:text-white transition-colors"
+                className="inline-flex items-center gap-2 rounded-full border border-white/20 text-white/50 px-4 py-2 text-xs font-medium hover:border-white/40 hover:text-white transition-colors"
               >
                 View All
                 {ArrowIcon}
