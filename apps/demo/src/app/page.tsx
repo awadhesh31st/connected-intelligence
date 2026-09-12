@@ -7,6 +7,7 @@ import Link from "next/link";
 /* Lavender #CDA9EE · Blue #A4C1EE · Black #000 · Cream #F6F1E8 · Yellow #FFD696 */
 
 const NAV_LINKS = [
+  { label: "Portfolio", href: "/portfolio" },
   { label: "Features", href: "#features" },
   { label: "Architecture", href: "#architecture" },
   { label: "Docs", href: null },
@@ -245,7 +246,7 @@ export default function Home() {
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mt-8 sm:mt-10">
               <Link
-                href="/portfolio"
+                href="/ecommerce"
                 className="inline-flex items-center gap-2 rounded-full bg-[#CDA9EE] text-black px-6 sm:px-7 py-3 sm:py-3.5 text-sm font-semibold tracking-wide hover:bg-[#c49de8] transition-colors"
               >
                 Try Live Demo
