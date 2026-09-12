@@ -20,6 +20,11 @@ const NAV_LINKS: NavLink[] = [
   },
 ];
 
+/** True when `pathname` is the link's route, or a page nested under it (e.g. /products/ask-this-page). */
+function isActiveRoute(pathname: string, href: string): boolean {
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 /** Renders a NavLink as a next/link (internal route) or a plain anchor (external), with an active state. */
 function NavAnchor({
   link,
@@ -86,7 +91,7 @@ export function SiteHeader({ secondary }: { secondary?: ReactNode }) {
             <NavAnchor
               key={link.label}
               link={link}
-              active={pathname === link.href}
+              active={isActiveRoute(pathname, link.href)}
               className="text-sm transition-colors tracking-wide"
             />
           ))}
@@ -123,7 +128,7 @@ export function SiteHeader({ secondary }: { secondary?: ReactNode }) {
               <NavAnchor
                 key={link.label}
                 link={link}
-                active={pathname === link.href}
+                active={isActiveRoute(pathname, link.href)}
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-sm px-3 py-2.5 rounded-xl hover:bg-black/[0.03] transition-colors tracking-wide"
               />

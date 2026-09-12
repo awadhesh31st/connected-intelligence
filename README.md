@@ -27,6 +27,7 @@ packages/
 |---|---|
 | `/` | Landing page |
 | `/products` | Product catalog — Ask This Page + chatbot widget |
+| `/products/[slug]` | Product detail page, data-driven from `apps/demo/src/lib/products-data.tsx` |
 | `/ecommerce` | Chatbot demo — Google Gemini |
 | `/portfolio` | Chatbot demo — Perplexity Sonar |
 | `/api/chat` | Streaming chat endpoint for the widget |

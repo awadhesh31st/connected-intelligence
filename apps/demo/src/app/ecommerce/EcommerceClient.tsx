@@ -11,7 +11,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function EcommerceClient() {
   return (
-    <div className="min-h-screen bg-amber-50">
+    <div className="min-h-screen bg-amber-50 animate-page-enter">
       <SiteHeader />
       <Breadcrumbs
         items={[{ label: "Home", href: "/" }, { label: "Products", href: "/products" }, { label: "TechStore Demo" }]}

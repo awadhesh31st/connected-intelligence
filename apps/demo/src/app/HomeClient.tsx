@@ -79,7 +79,7 @@ const FEATURES = [
 
 export default function HomeClient() {
   return (
-    <div className="min-h-screen bg-[#F6F1E8]">
+    <div className="min-h-screen bg-[#F6F1E8] animate-page-enter">
       <SiteHeader />
 
       {/* ── Hero Section — Dark ── */}

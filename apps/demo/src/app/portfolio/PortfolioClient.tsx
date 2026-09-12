@@ -130,7 +130,7 @@ export default function PortfolioClient({ initialRepos }: PortfolioClientProps) 
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F6F1E8]">
+    <div className="min-h-screen bg-[#F6F1E8] animate-page-enter">
       <SiteHeader
         secondary={
           // Sticks to the same unit as the global header (see SiteHeader's
