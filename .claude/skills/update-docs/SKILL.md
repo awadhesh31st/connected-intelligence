@@ -1,14 +1,20 @@
 ---
 name: update-docs
-description: Update this repo's README documentation (root and any relevant subfolder) and append a Changelog entry after making code changes. Use after implementing a feature, fix, refactor, or architecture decision — or whenever asked to update docs/changelog/README.
+description: Update this repo's README documentation (root and any relevant subfolder) and append a CHANGELOG.md entry after making code changes. Use after implementing a feature, fix, refactor, or architecture decision — or whenever asked to update docs/changelog/README.
 ---
 
 # Update docs
 
-This repo keeps documentation deliberately small: one root `README.md` (with a
-Changelog section) plus a subfolder `README.md` only where a folder's workflow
-genuinely doesn't fit at the root (currently just `apps/extension`). This
-skill keeps that documentation in sync with the code as it changes.
+This repo keeps documentation deliberately small and separated by purpose:
+
+- Root `README.md` — a **pure overview**: what the repo is, its structure/routes,
+  and its tech stack. No implementation notes, walkthroughs, or history.
+- Root `CHANGELOG.md` — the running history of what changed, why, and any
+  trade-offs, newest first.
+- A subfolder `README.md` only where a folder's workflow genuinely doesn't fit
+  at the root (currently just `apps/extension`).
+
+This skill keeps that documentation in sync with the code as it changes.
 
 ## Steps
 
@@ -17,24 +23,20 @@ skill keeps that documentation in sync with the code as it changes.
    session). Identify: what was added/changed/removed, why, and any
    trade-offs or decisions made along the way.
 
-2. **Update affected README(s).** For each README whose documented setup,
-   structure, usage, or command list is now stale:
-   - Root `README.md` — structure diagram, tech stack, getting-started
-     commands, or package/app overviews.
-   - `apps/extension/README.md` — anything about the extension's setup,
-     permissions, build, or usage.
-   Edit in place; keep the same concise style already used in these files
-   (short sections, tables where they help scanning, no exhaustive
-   file-by-file API dumps).
+2. **Update the root `README.md` only if the overview itself is now stale** —
+   i.e. the structure diagram, routes table, or tech stack changed. Do not
+   add implementation notes, usage examples, or history to it; those don't
+   belong there.
 
-3. **Decide if a new subfolder README is warranted.** Only add one if the
+3. **Update `apps/extension/README.md`** (or another subfolder README, if one
+   exists) when its documented setup, permissions, build, or usage changed.
+
+4. **Decide if a new subfolder README is warranted.** Only add one if the
    folder now has a distinct enough workflow (its own build/run/permission
    steps) that the root README can't reasonably cover it. Default to *not*
-   adding one — fold the information into the root README instead. If you
-   do add one, link to it from the root README's structure/overview section.
+   adding one.
 
-4. **Append a Changelog entry** to the bottom of the root `README.md`'s
-   `## Changelog` section, newest entry first:
+5. **Append a `CHANGELOG.md` entry**, newest entry first:
    ```
    ### YYYY-MM-DD — <short title>
 
@@ -47,10 +49,10 @@ skill keeps that documentation in sync with the code as it changes.
    and reasoning without re-deriving it, not a full commit log (git already
    has that).
 
-5. **Don't let `.md` files sprawl.** Never recreate the old pattern of many
+6. **Don't let `.md` files sprawl.** Never recreate the old pattern of many
    loosely-scoped root docs. If content doesn't clearly belong in the root
-   README or the one extension README, it probably belongs in a code
-   comment, a PR description, or nowhere — not a new file.
+   README, `CHANGELOG.md`, or the one extension README, it probably belongs
+   in a code comment, a PR description, or nowhere — not a new file.
 
 ## When to run this
 
