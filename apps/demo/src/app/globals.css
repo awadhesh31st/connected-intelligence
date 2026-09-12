@@ -14,6 +14,26 @@ html {
   }
 }
 
+/* Subtle page-enter fade/slide, applied to each top-level page wrapper.
+   Runs as a native CSS animation (not JS-triggered), so it plays from first
+   paint regardless of hydration timing — no flash of invisible content. */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-page-enter {
+    animation: page-enter 400ms ease-out both;
+  }
+}
+
 body {
   font-family: system-ui, -apple-system, sans-serif;
 }
