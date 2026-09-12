@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Products — Connected Intelligence",
@@ -39,19 +42,8 @@ const EXTENSION_CAPABILITIES = [
 export default function ProductsPage() {
   return (
     <div className="min-h-screen bg-[#F6F1E8]">
-      {/* ── Header ── */}
-      <header className="sticky top-0 z-50 bg-[#F6F1E8]/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 py-4 sm:py-5">
-          <Link href="/" className="text-lg font-bold tracking-tight text-black flex items-center gap-1">
-            Connected
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#CDA9EE]" />
-            Intelligence
-          </Link>
-          <Link href="/" className="text-sm text-black/40 hover:text-black transition-colors tracking-wide">
-            &larr; Home
-          </Link>
-        </div>
-      </header>
+      <SiteHeader />
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Products" }]} />
 
       {/* ── Hero ── */}
       <section className="mx-auto max-w-3xl px-4 sm:px-6 pt-12 sm:pt-16 pb-10 sm:pb-14 text-center">
@@ -239,17 +231,7 @@ export default function ProductsPage() {
         </div>
       </section>
 
-      {/* ── Footer ── */}
-      <footer className="mx-auto max-w-6xl px-4 sm:px-6 pb-8 sm:pb-12 pt-6 sm:pt-8 border-t border-black/5">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <Link href="/" className="text-base font-bold text-black tracking-tight flex items-center gap-1">
-            Connected
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#CDA9EE]" />
-            Intelligence
-          </Link>
-          <p className="text-xs text-black/20 tracking-wide">&copy; 2026 Connected Intelligence</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

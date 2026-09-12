@@ -1,56 +1,9 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 
 /* ─────────────── Zona Pro Pastel Theme ─────────────── */
 /* Lavender #CDA9EE · Blue #A4C1EE · Black #000 · Cream #F6F1E8 · Yellow #FFD696 */
-
-interface NavLink {
-  label: string;
-  href: string;
-  external?: boolean;
-}
-
-const NAV_LINKS: NavLink[] = [
-  { label: "Products", href: "/products" },
-  { label: "Features", href: "#features" },
-  { label: "Portfolio", href: "/portfolio" },
-  {
-    label: "Docs",
-    href: "https://github.com/awadhesh31st/connected-intelligence",
-    external: true,
-  },
-];
-
-/** Renders a NavLink as a next/link (internal route), or a plain anchor (hash/external). */
-function NavAnchor({
-  link,
-  className,
-  onClick,
-}: {
-  link: NavLink;
-  className: string;
-  onClick?: () => void;
-}) {
-  if (link.href.startsWith("/")) {
-    return (
-      <Link href={link.href} className={className} onClick={onClick}>
-        {link.label}
-      </Link>
-    );
-  }
-  return (
-    <a
-      href={link.href}
-      className={className}
-      onClick={onClick}
-      {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-    >
-      {link.label}
-    </a>
-  );
-}
 
 const FEATURES = [
   {
@@ -125,66 +78,9 @@ const FEATURES = [
 /* ─────────────── Page Component ─────────────── */
 
 export default function HomeClient() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   return (
     <div className="min-h-screen bg-[#F6F1E8]">
-
-      {/* ── Navbar ── */}
-      <nav className="sticky top-0 z-50 bg-[#F6F1E8]/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 py-4 sm:py-5">
-          <Link href="/" className="text-lg font-bold tracking-tight text-black flex items-center gap-1">
-            Connected
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#CDA9EE]" />
-            Intelligence
-          </Link>
-
-          <div className="hidden md:flex items-center gap-8">
-            {NAV_LINKS.map((link) => (
-              <NavAnchor
-                key={link.label}
-                link={link}
-                className="text-sm text-black/50 hover:text-black transition-colors tracking-wide"
-              />
-            ))}
-          </div>
-
-          <div className="flex items-center gap-3">
-            {/* Mobile hamburger */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 -mr-2 text-black/50 hover:text-black transition-colors"
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
-                </svg>
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile dropdown menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-black/5 bg-[#F6F1E8]/95 backdrop-blur-md px-4 pb-4 pt-2">
-            <div className="flex flex-col gap-1">
-              {NAV_LINKS.map((link) => (
-                <NavAnchor
-                  key={link.label}
-                  link={link}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-sm text-black/60 hover:text-black px-3 py-2.5 rounded-xl hover:bg-black/[0.03] transition-colors tracking-wide"
-                />
-              ))}
-            </div>
-          </div>
-        )}
-      </nav>
+      <SiteHeader />
 
       {/* ── Hero Section — Dark ── */}
       <section className="mx-3 sm:mx-4 md:mx-6 lg:mx-auto lg:max-w-6xl rounded-[20px] sm:rounded-[24px] bg-gradient-to-br from-black via-[#111] to-[#1a1a1a] overflow-hidden">
@@ -309,29 +205,7 @@ export default function HomeClient() {
         </div>
       </section>
 
-      {/* ── Footer ── */}
-      <footer className="mx-auto max-w-6xl px-4 sm:px-6 pb-8 sm:pb-12 pt-6 sm:pt-8 border-t border-black/5">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <Link href="/" className="text-base font-bold text-black tracking-tight flex items-center gap-1">
-            Connected
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#CDA9EE]" />
-            Intelligence
-          </Link>
-          <div className="flex items-center gap-6 text-sm text-black/40">
-            <Link href="/products" className="hover:text-black transition-colors">Products</Link>
-            <Link href="/portfolio" className="hover:text-black transition-colors">Portfolio</Link>
-            <a
-              href="https://github.com/awadhesh31st/connected-intelligence"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-black transition-colors"
-            >
-              GitHub
-            </a>
-          </div>
-          <p className="text-xs text-black/20 tracking-wide">&copy; 2026 Connected Intelligence</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

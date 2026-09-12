@@ -26,10 +26,13 @@ packages/
 | Route | Description |
 |---|---|
 | `/` | Landing page |
+| `/products` | Product catalog — Ask This Page + chatbot widget |
 | `/ecommerce` | Chatbot demo — Google Gemini |
 | `/portfolio` | Chatbot demo — Perplexity Sonar |
 | `/api/chat` | Streaming chat endpoint for the widget |
 | `/api/page-qa` | Backend for the Ask This Page extension |
+
+Every route shares a global header/footer (`apps/demo/src/components/`) with active-state nav, and non-root routes show a breadcrumb trail back to `/`.
 
 ## Tech stack
 
