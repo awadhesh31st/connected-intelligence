@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://connected-intelligence-demo.vercel.app"),
   title: "Connected Intelligence",
   description:
-    "A modular AI chatbot widget for Next.js apps, demoed with e-commerce and portfolio assistants powered by Google Gemini and Perplexity Sonar.",
+    "A platform of AI-powered products that help you understand, analyze, and interact with information quickly and effortlessly.",
 };
 
 export default function RootLayout({
