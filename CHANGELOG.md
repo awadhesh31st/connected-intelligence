@@ -2,6 +2,14 @@
 
 Dated, most recent first. Each entry is a short record of what changed, why, and any trade-offs worth remembering. Kept separate from the root `README.md` so that file can stay a pure repository overview.
 
+### 2026-09-13 — 404 centering, sticky portfolio nav, scroll-spy
+
+- 404 page: content was top-aligned inside the flex-1 main area. Made `main` itself a flex container (`flex-1 flex flex-col items-center justify-center`) so the message and CTA sit centered in the space between header and footer at any viewport height. Renamed the CTA to "Go Home" per feedback.
+- Portfolio's section nav (Skills/Experience/Projects/Contact) scrolled away entirely once you scrolled past it — no way to jump sections without scrolling back up. Gave `SiteHeader` an optional `secondary` slot rendered inside its own sticky container, so a page's local nav sticks together with the global header as one unit with no pixel-offset math (avoids the overlap/mismatch risk of two independently-positioned sticky elements). Portfolio now passes its section nav through this slot.
+- Added scroll-spy (`IntersectionObserver` watching each section, `aria-current="location"` on the active link) so the current section is always visually indicated while scrolling — plus a scroll-position fallback so the last section (Contact) still activates correctly when the page is shorter near the bottom than the observer's trigger band.
+- Added `scroll-mt-[150px]` to the four portfolio sections and a global `html { scroll-padding-top: 84px }` (single-sticky-header pages) so anchor jumps and scroll-spy targets land below the sticky bar(s) instead of tucking the heading underneath it. Also added `scroll-behavior: smooth` gated behind `prefers-reduced-motion: no-preference`.
+- No README changes — routes and structure are unchanged; these are page-level implementation fixes.
+
 ### 2026-09-13 — Site-wide navigation overhaul
 
 - Each page (`/`, `/products`, `/ecommerce`, `/portfolio`) had its own bespoke header and footer, so the set of reachable pages, the visual treatment, and even mobile behavior differed depending on where you landed. Extracted shared `SiteHeader`, `SiteFooter`, and `Breadcrumbs` components (`apps/demo/src/components/`) and used them on every page for a single, consistent primary nav with an active-page indicator (`usePathname` + `aria-current="page"`).

@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  /* Keeps in-page anchor targets (e.g. #features, #ask-this-page) from
+     landing underneath the sticky site header. */
+  scroll-padding-top: 84px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 body {
   font-family: system-ui, -apple-system, sans-serif;
 }

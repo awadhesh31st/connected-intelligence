@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -62,8 +62,13 @@ function NavAnchor({
  * Global site navigation, used on every page so the same primary routes and
  * current-page state are always available, regardless of which product/demo
  * you're viewing.
+ *
+ * `secondary` renders inside the same sticky container, directly below the
+ * main row — used for a page's own in-page section nav (see the portfolio
+ * page) so both bars stick together as one unit without needing to measure
+ * pixel heights to avoid overlap.
  */
-export function SiteHeader() {
+export function SiteHeader({ secondary }: { secondary?: ReactNode }) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -107,6 +112,8 @@ export function SiteHeader() {
           </button>
         </div>
       </div>
+
+      {secondary}
 
       {/* Mobile dropdown menu */}
       {mobileMenuOpen && (
