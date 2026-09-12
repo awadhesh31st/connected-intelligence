@@ -2,6 +2,14 @@
 
 Dated, most recent first. Each entry is a short record of what changed, why, and any trade-offs worth remembering. Kept separate from the root `README.md` so that file can stay a pure repository overview.
 
+### 2026-09-13 — Single source of truth for the site's canonical URL
+
+- Reviewed the app's URL structure end to end (`/`, `/products`, `/products/[slug]`, `/ecommerce`, `/portfolio`, `/api/*`). The routes themselves were already clean — lowercase, kebab-case, no query strings or opaque IDs — so no paths changed.
+- Found a real problem underneath them: the production URL `https://connected-intelligence-demo.vercel.app` was hardcoded in three places (`layout.tsx`'s `metadataBase`, `sitemap.ts`, `robots.ts`). Once a custom domain is attached, all three would keep emitting the old Vercel URL in canonical links, Open Graph tags, and the sitemap unless each was edited and redeployed by hand.
+- Added `apps/demo/src/lib/site-config.ts` exporting a single `SITE_URL`, read from a new `NEXT_PUBLIC_SITE_URL` environment variable (falling back to the Vercel preview URL so local/preview builds are unaffected). All three call sites now import it. Pointing the app at a new domain is now a one-line environment variable change, not a three-file code change.
+- Added `apps/demo/.env.example` documenting the existing AI provider keys plus this new optional variable, and updated the README's setup instructions to reference it.
+- No routes were renamed, so no redirects were needed.
+
 ### 2026-09-13 — Portfolio page polish: copy, background, links
 
 - **Content formatting**: removed every stylistic ASCII hyphen from the Portfolio page's visible copy (`PortfolioClient.tsx` and the `projects`/`portfolioOwner` data it renders), replacing compound-adjective hyphens with a space (`AI-powered` → `AI powered`, `high-quality` → `high quality`, `enterprise-grade` → `enterprise grade`, `cross-functional(ly)` → `cross functional(ly)`, `mission-critical` → `mission critical`, `client-facing` → `client facing`, `data-fetching` → `data fetching`, `real-time` → `real time`, `high-scale` → `high scale`, `performance-focused` → `performance focused`, `Open-source` → `Open source`, `Redux-Saga` → `Redux Saga`), rewrote `end-to-end` as `end to end`, and switched the phone number's separator from a hyphen to a space. Existing en dashes (`frontend–backend`) and em dashes were left untouched — only the ASCII hyphen was in scope. No facts, skills, or experience changed, only how they're typeset. Dynamically-fetched GitHub repo names (external identifiers, not authored copy) are unaffected and out of scope.
