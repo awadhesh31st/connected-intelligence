@@ -1,0 +1,212 @@
+export const products = [
+  {
+    id: "1",
+    name: "Wireless Noise-Cancelling Headphones",
+    price: 299.99,
+    currency: "USD",
+    description: "Premium over-ear headphones with active noise cancellation, 30-hour battery life, and Hi-Res audio support.",
+    image: "https://placehold.co/300x300/f59e0b/fff?text=Headphones",
+    rating: 4.7,
+    inStock: true,
+    category: "Electronics",
+    url: "#",
+  },
+  {
+    id: "2",
+    name: "Ergonomic Mechanical Keyboard",
+    price: 179.99,
+    currency: "USD",
+    description: "Split ergonomic design with hot-swappable Cherry MX switches, RGB backlighting, and programmable keys.",
+    image: "https://placehold.co/300x300/f59e0b/fff?text=Keyboard",
+    rating: 4.5,
+    inStock: true,
+    category: "Electronics",
+    url: "#",
+  },
+  {
+    id: "3",
+    name: "Ultra-Slim Laptop Stand",
+    price: 49.99,
+    currency: "USD",
+    description: "Adjustable aluminum laptop stand with cable management, compatible with laptops up to 17 inches.",
+    image: "https://placehold.co/300x300/f59e0b/fff?text=Stand",
+    rating: 4.8,
+    inStock: true,
+    category: "Accessories",
+    url: "#",
+  },
+  {
+    id: "4",
+    name: "Smart Fitness Watch Pro",
+    price: 399.99,
+    currency: "USD",
+    description: "Advanced health monitoring with ECG, SpO2, sleep tracking, and 7-day battery life. Water resistant to 50m.",
+    image: "https://placehold.co/300x300/f59e0b/fff?text=Watch",
+    rating: 4.6,
+    inStock: false,
+    category: "Wearables",
+    url: "#",
+  },
+  {
+    id: "5",
+    name: "Portable Bluetooth Speaker",
+    price: 129.99,
+    currency: "USD",
+    description: "360-degree sound with deep bass, IP67 waterproof rating, and 20-hour playtime.",
+    image: "https://placehold.co/300x300/f59e0b/fff?text=Speaker",
+    rating: 4.4,
+    inStock: true,
+    category: "Electronics",
+    url: "#",
+  },
+  {
+    id: "6",
+    name: "USB-C Hub Docking Station",
+    price: 89.99,
+    currency: "USD",
+    description: "12-in-1 hub with dual HDMI, USB 3.0 ports, SD card reader, Ethernet, and 100W power delivery.",
+    image: "https://placehold.co/300x300/f59e0b/fff?text=Hub",
+    rating: 4.3,
+    inStock: true,
+    category: "Accessories",
+    url: "#",
+  },
+];
+
+export const projects = [
+  {
+    id: "1",
+    title: "Connected Intelligence",
+    description: "AI-powered application built with modern frontend technologies and deployed on Vercel.",
+    technologies: ["TypeScript", "React", "Next.js", "AI SDK"],
+    status: "completed" as const,
+    demoUrl: "https://connected-intelligence-demo.vercel.app/",
+    githubUrl: "https://github.com/awadhesh31st/connected-intelligence",
+  },
+  {
+    id: "2",
+    title: "Chained Math Solver",
+    description: "Function chain calculator app with composable mathematical operations and interactive UI.",
+    technologies: ["TypeScript", "React", "Next.js"],
+    status: "completed" as const,
+    demoUrl: "https://chained-math-solver.vercel.app/",
+    githubUrl: "https://github.com/awadhesh31st/chained-math-solver",
+  },
+  {
+    id: "3",
+    title: "Storybook Component Library",
+    description: "Open-source UI component package with TypeScript and React, providing reusable UI components hosted on Chromatic.",
+    technologies: ["TypeScript", "React", "Storybook", "Chromatic"],
+    status: "completed" as const,
+    demoUrl: "",
+    githubUrl: "https://github.com/awadhesh31st/Storybook",
+  },
+  {
+    id: "4",
+    title: "Next.js Architecture",
+    description: "Reference architecture patterns and best practices for building scalable Next.js applications.",
+    technologies: ["TypeScript", "Next.js", "React"],
+    status: "completed" as const,
+    demoUrl: "https://next-js-architecture.vercel.app/",
+    githubUrl: "https://github.com/awadhesh31st/next-js-architecture",
+  },
+];
+
+// Career start (first professional role: WorkOnGrid, Jul 2019). Experience is
+// derived from this date so it increases automatically over time instead of
+// being hardcoded. Note: month is 0-indexed, so 6 = July.
+const CAREER_START = new Date(2019, 6, 1);
+
+/** Whole months elapsed between two dates (clamped at 0). */
+function getExperienceMonths(from: Date = CAREER_START, to: Date = new Date()): number {
+  const months =
+    (to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth());
+  return Math.max(0, months);
+}
+
+const experienceMonths = getExperienceMonths();
+const experienceYears = Math.floor(experienceMonths / 12);
+
+export const portfolioOwner = {
+  name: "Awadhesh Kumar",
+  title: "Senior Software Engineer",
+  email: "rawatawadhesh03@gmail.com",
+  phone: "+91-8296422201",
+  github: "https://github.com/awadhesh31st",
+  githubUsername: "awadhesh31st",
+  avatar: "https://github.com/awadhesh31st.png",
+  linkedin: "https://www.linkedin.com/in/kawadhe",
+  totalExperienceMonths: experienceMonths,
+  summary: `Senior Software Engineer with ${experienceYears}+ years of experience in designing, developing, and optimizing scalable web applications. Proficient in React.js, Next.js, TypeScript, and JavaScript with deep expertise in micro frontend architecture, state management, performance tuning, and frontend–backend API contract design. Known for delivering high-quality, maintainable code and leading cross-functional teams to ship impactful products.`,
+  skills: {
+    Frontend: ["React.js", "Next.js", "Remix", "Vue.js", "TypeScript", "JavaScript", "HTML5", "SCSS"],
+    Backend: ["Node.js", "REST API Design", "GraphQL"],
+    "State Management": ["Redux", "Redux-Saga", "Zustand", "MobX", "React Query"],
+    Testing: ["Jest", "Cypress", "React Testing Library", "Enzyme"],
+    "UI / Styling": ["Tailwind CSS", "Material UI", "Chakra UI", "Ant Design", "Bootstrap"],
+    Architecture: ["Micro Frontends", "Frontend–Backend API Contract Design", "Performance Architecture"],
+    Performance: ["Code Splitting", "Lazy Loading", "Memoization", "Caching", "Virtualization", "Webpack", "Turbopack"],
+    DevOps: ["GitHub", "GitHub Actions", "npm", "CI/CD"],
+  },
+  experience: [
+    {
+      company: "Cisco",
+      role: "Senior Software Engineer",
+      duration: "Sep 2025 – Present",
+      bullets: [
+        "Architecting and delivering AI-powered assistant interfaces with contextual intelligence and dynamic UI systems.",
+        "Designing modular, scalable component architecture for AI Canvas with real-time telemetry visualization.",
+        "Enhancing response clarity through structured UX patterns and performance-focused rendering strategies.",
+        "Collaborating cross-functionally with AI/ML, backend, and product teams to ship secure, enterprise-grade solutions.",
+      ],
+    },
+    {
+      company: "Foundit (Monster India)",
+      role: "Senior Software Engineer",
+      duration: "Sep 2023 – Sep 2025",
+      bullets: [
+        "Led frontend architecture for a high-scale job platform serving a massive user base.",
+        "Designed and implemented a micro frontend ecosystem enabling independent deployments and scalable team collaboration.",
+        "Built and governed a reusable component library to standardize UI systems.",
+        "Engineered advanced data-fetching, caching, and performance optimization strategies.",
+        "Strengthened quality engineering practices with comprehensive testing and clean architectural standards.",
+      ],
+    },
+    {
+      company: "Omnie Solutions (I) Pvt Ltd",
+      role: "Senior Software Engineer",
+      duration: "May 2022 – Sep 2023",
+      bullets: [
+        "Delivered enterprise-grade React and TypeScript solutions for mission-critical healthcare workflows.",
+        "Engineered robust state management and middleware integrations to streamline complex data orchestration.",
+        "Spearheaded migration to micro frontend architecture.",
+        "Built accessible, reusable UI systems aligned with modern compliance standards.",
+        "Drove performance optimization, API efficiency, and maintainable frontend architecture across teams.",
+      ],
+    },
+    {
+      company: "WorkOnGrid",
+      role: "Software Engineer",
+      duration: "Jul 2019 – May 2022",
+      bullets: [
+        "Designed and developed scalable client-facing dashboards with strong emphasis on usability and system reliability.",
+        "Built reusable component systems using modern frontend engineering practices.",
+        "Implemented efficient REST and GraphQL integrations for optimized data exchange.",
+        "Improved application performance through bundling optimization and clean component design.",
+        "Contributed to documentation, onboarding, and collaborative feature delivery.",
+      ],
+    },
+  ],
+  education: [
+    {
+      degree: "Master of Computer Applications (MCA)",
+      institution: "National Institute of Technology Karnataka, Surathkal",
+      year: "2019",
+    },
+    {
+      degree: "Bachelor of Computer Applications (BCA)",
+      institution: "University of Allahabad",
+      year: "2016",
+    },
+  ],
+};

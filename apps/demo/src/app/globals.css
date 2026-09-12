@@ -1,0 +1,153 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Chatbot markdown styles */
+.chatbot-markdown {
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.chatbot-markdown p {
+  margin: 0.4em 0;
+}
+
+.chatbot-markdown p:first-child {
+  margin-top: 0;
+}
+
+.chatbot-markdown p:last-child {
+  margin-bottom: 0;
+}
+
+.chatbot-markdown strong {
+  font-weight: 600;
+}
+
+.chatbot-markdown em {
+  font-style: italic;
+}
+
+.chatbot-markdown h1,
+.chatbot-markdown h2,
+.chatbot-markdown h3,
+.chatbot-markdown h4 {
+  font-weight: 600;
+  margin: 0.8em 0 0.4em;
+}
+
+.chatbot-markdown h1:first-child,
+.chatbot-markdown h2:first-child,
+.chatbot-markdown h3:first-child,
+.chatbot-markdown h4:first-child {
+  margin-top: 0;
+}
+
+.chatbot-markdown h1 {
+  font-size: 1.25em;
+}
+
+.chatbot-markdown h2 {
+  font-size: 1.15em;
+}
+
+.chatbot-markdown h3 {
+  font-size: 1.05em;
+}
+
+.chatbot-markdown ul,
+.chatbot-markdown ol {
+  margin: 0.4em 0;
+  padding-left: 1.5em;
+}
+
+.chatbot-markdown ul {
+  list-style-type: disc;
+}
+
+.chatbot-markdown ol {
+  list-style-type: decimal;
+}
+
+.chatbot-markdown li {
+  margin: 0.2em 0;
+}
+
+.chatbot-markdown li > ul,
+.chatbot-markdown li > ol {
+  margin: 0.1em 0;
+}
+
+.chatbot-markdown code {
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 0.25em;
+  padding: 0.15em 0.35em;
+  font-size: 0.875em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.chatbot-markdown pre {
+  margin: 0.5em 0;
+  padding: 0.75em;
+  border-radius: 0.5em;
+  background: rgba(0, 0, 0, 0.06);
+  overflow-x: auto;
+}
+
+.chatbot-markdown pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.85em;
+}
+
+.chatbot-markdown blockquote {
+  border-left: 3px solid var(--chatbot-border, #e2e8f0);
+  margin: 0.5em 0;
+  padding: 0.25em 0.75em;
+  color: var(--chatbot-text-secondary, #64748b);
+}
+
+.chatbot-markdown a {
+  color: var(--chatbot-primary, #2563eb);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.chatbot-markdown a:hover {
+  opacity: 0.8;
+}
+
+.chatbot-markdown hr {
+  border: none;
+  border-top: 1px solid var(--chatbot-border, #e2e8f0);
+  margin: 0.75em 0;
+}
+
+.chatbot-markdown table {
+  border-collapse: collapse;
+  margin: 0.5em 0;
+  font-size: 0.9em;
+  width: 100%;
+}
+
+.chatbot-markdown th,
+.chatbot-markdown td {
+  border: 1px solid var(--chatbot-border, #e2e8f0);
+  padding: 0.35em 0.6em;
+  text-align: left;
+}
+
+.chatbot-markdown th {
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.chatbot-markdown img {
+  max-width: 100%;
+  border-radius: 0.5em;
+}
