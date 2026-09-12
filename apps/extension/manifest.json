@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Ask This Page",
+  "version": "0.1.0",
+  "description": "Ask questions about the page you're viewing and see exactly where the answer comes from.",
+  "permissions": ["activeTab", "scripting", "storage", "sidePanel"],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Ask This Page"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/sidepanel.html"
+  },
+  "options_page": "options/options.html",
+  "minimum_chrome_version": "116"
+}

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Ask This Page</title>
+    <link rel="stylesheet" href="sidepanel.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="page-header">
+        <div class="page-info">
+          <p class="page-title" id="page-title">Loading…</p>
+          <p class="page-url" id="page-url"></p>
+        </div>
+        <button id="refresh-btn" class="icon-btn" title="Re-read this page">↻</button>
+      </header>
+
+      <div id="key-banner" class="banner" hidden>
+        No Gemini API key set.
+        <button id="open-settings-btn">Open settings</button>
+      </div>
+
+      <div id="unavailable-banner" class="banner" hidden>
+        This page can't be read by extensions (e.g. a browser settings or store page).
+      </div>
+
+      <main id="messages" class="messages">
+        <div id="empty-state" class="empty-state">
+          <p class="empty-title">Ask anything about this page</p>
+          <div class="suggestions" id="suggestions">
+            <button class="chip" data-prompt="Summarize this page">Summarize this page</button>
+            <button class="chip" data-prompt="What are the key points?">Key points</button>
+            <button class="chip" data-prompt="Is pricing mentioned anywhere on this page?">Find pricing</button>
+            <button class="chip" data-prompt="What are the eligibility or requirement details on this page?">Eligibility requirements</button>
+          </div>
+        </div>
+      </main>
+
+      <form id="composer" class="composer">
+        <textarea
+          id="question-input"
+          rows="1"
+          placeholder="Ask a question about this page…"
+        ></textarea>
+        <button id="send-btn" type="submit" title="Send">➤</button>
+      </form>
+    </div>
+    <script src="sidepanel.js"></script>
+  </body>
+</html>
