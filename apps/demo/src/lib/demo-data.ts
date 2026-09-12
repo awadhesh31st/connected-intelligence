@@ -9,7 +9,6 @@ export const products = [
     rating: 4.7,
     inStock: true,
     category: "Electronics",
-    url: "#",
   },
   {
     id: "2",
@@ -21,7 +20,6 @@ export const products = [
     rating: 4.5,
     inStock: true,
     category: "Electronics",
-    url: "#",
   },
   {
     id: "3",
@@ -33,7 +31,6 @@ export const products = [
     rating: 4.8,
     inStock: true,
     category: "Accessories",
-    url: "#",
   },
   {
     id: "4",
@@ -45,7 +42,6 @@ export const products = [
     rating: 4.6,
     inStock: false,
     category: "Wearables",
-    url: "#",
   },
   {
     id: "5",
@@ -57,7 +53,6 @@ export const products = [
     rating: 4.4,
     inStock: true,
     category: "Electronics",
-    url: "#",
   },
   {
     id: "6",
@@ -69,7 +64,6 @@ export const products = [
     rating: 4.3,
     inStock: true,
     category: "Accessories",
-    url: "#",
   },
 ];
 
