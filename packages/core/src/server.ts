@@ -8,6 +8,7 @@ export * from "./types/action";
 export * from "./types/theme";
 export * from "./types/config";
 export * from "./types/conversation";
+export * from "./types/page-qa";
 
 // Context
 export * from "./context/context-engine";

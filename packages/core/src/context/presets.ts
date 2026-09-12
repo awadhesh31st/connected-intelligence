@@ -55,6 +55,53 @@ export function createEcommerceContext(
   return builder.build();
 }
 
+/**
+ * Context preset for the "Ask This Page" browser extension.
+ *
+ * The assistant answers questions using ONLY the content extracted from the
+ * webpage the user is currently viewing, and must cite the specific chunk ids
+ * (with a verbatim quote) that support each answer so the extension can
+ * highlight the exact source on the page.
+ */
+export function createPageQAContext(): PlatformContext {
+  return new ContextBuilder()
+    .setIdentity(
+      "Page Assistant",
+      "custom",
+      "I answer questions about the webpage the user is currently viewing, using only the content of that page."
+    )
+    .setTone("professional")
+    .setResponseStyle("concise")
+    .setTopicBoundaries([
+      "the content of the current webpage",
+      "summarizing the page",
+      "locating information on the page",
+    ])
+    .setFallbackMessage(
+      "I can only answer questions about the page you are currently viewing."
+    )
+    .addInstructions([
+      "Answer the user's question using ONLY the numbered page content chunks provided below. Do not use outside knowledge.",
+      "Each chunk is provided in the form: [<id>] (<heading>) <text>. Treat the page content as the sole source of truth.",
+      "For every claim in your answer, cite the chunk id(s) it came from. In each citation, include the chunk's `chunkId` and a short, EXACT verbatim `quote` copied character-for-character from that chunk's text (do not paraphrase the quote).",
+      "Prefer the shortest quote (a sentence or phrase) that directly supports the answer.",
+      "If the answer cannot be found in the provided page content, set `found` to false, briefly say the information is not on this page, and return an empty citations array.",
+      "When the answer is found, set `found` to true and keep the answer grounded in the cited chunks.",
+      "Keep answers concise and directly responsive to the question.",
+    ])
+    .setWelcomeMessage(
+      "Ask me anything about this page and I'll show you exactly where the answer comes from."
+    )
+    .setPlaceholder("Ask about this page...")
+    .setSuggestedPrompts([
+      "Summarize this page",
+      "What are the key points?",
+      "Where does it mention pricing?",
+      "Find the section about cancellation",
+    ])
+    .build();
+}
+
 export interface PortfolioExperience {
   company: string;
   role: string;

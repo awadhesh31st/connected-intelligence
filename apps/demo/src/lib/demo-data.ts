@@ -112,6 +112,21 @@ export const projects = [
   },
 ];
 
+// Career start (first professional role: WorkOnGrid, Jul 2019). Experience is
+// derived from this date so it increases automatically over time instead of
+// being hardcoded. Note: month is 0-indexed, so 6 = July.
+const CAREER_START = new Date(2019, 6, 1);
+
+/** Whole months elapsed between two dates (clamped at 0). */
+function getExperienceMonths(from: Date = CAREER_START, to: Date = new Date()): number {
+  const months =
+    (to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth());
+  return Math.max(0, months);
+}
+
+const experienceMonths = getExperienceMonths();
+const experienceYears = Math.floor(experienceMonths / 12);
+
 export const portfolioOwner = {
   name: "Awadhesh Kumar",
   title: "Senior Software Engineer",
@@ -121,9 +136,8 @@ export const portfolioOwner = {
   githubUsername: "awadhesh31st",
   avatar: "https://github.com/awadhesh31st.png",
   linkedin: "https://www.linkedin.com/in/kawadhe",
-  totalExperienceMonths: 82,
-  summary:
-    "Senior Software Engineer with 6+ years of experience in designing, developing, and optimizing scalable web applications. Proficient in React.js, Next.js, TypeScript, and JavaScript with deep expertise in micro frontend architecture, state management, performance tuning, and frontend–backend API contract design. Known for delivering high-quality, maintainable code and leading cross-functional teams to ship impactful products.",
+  totalExperienceMonths: experienceMonths,
+  summary: `Senior Software Engineer with ${experienceYears}+ years of experience in designing, developing, and optimizing scalable web applications. Proficient in React.js, Next.js, TypeScript, and JavaScript with deep expertise in micro frontend architecture, state management, performance tuning, and frontend–backend API contract design. Known for delivering high-quality, maintainable code and leading cross-functional teams to ship impactful products.`,
   skills: {
     Frontend: ["React.js", "Next.js", "Remix", "Vue.js", "TypeScript", "JavaScript", "HTML5", "SCSS"],
     Backend: ["Node.js", "REST API Design", "GraphQL"],
