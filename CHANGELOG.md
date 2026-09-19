@@ -2,6 +2,22 @@
 
 Dated, most recent first. Each entry is a short record of what changed, why, and any trade-offs worth remembering. Kept separate from the root `README.md` so that file can stay a pure repository overview.
 
+### 2026-09-19 — Ask This Page backend: device auth, quotas, and hardening
+
+`/api/page-qa` was a single stateless route with a shared server-side Gemini key, no authentication, no database, and no persisted rate limiting — anyone who extracted the endpoint from the extension bundle could call it directly and run up the API bill. This closes that gap with a backend that's real but stays small enough to actually maintain.
+
+- **Identity, without signup friction**: the extension has no accounts. On first use it silently registers as an anonymous **device** (`POST /api/extension/register`); the backend mints a random opaque bearer token, stores only its SHA-256 hash (`apps/demo/src/lib/auth/device-token.ts`), and the extension caches the raw token in `chrome.storage.local` (not `.sync` — it's a secret, not a preference) and sends it as `Authorization: Bearer <token>` from then on. A 401 (unknown/revoked token) makes the extension silently re-register once and retry, so a database reset or manual revocation doesn't permanently break an install.
+- **Database**: Postgres via Drizzle ORM (`apps/demo/src/lib/db/`), targeting Neon's serverless HTTP driver so it works from Vercel's serverless functions without a connection-pool problem. Two tables: `devices` (token hash, revocation) and `usage_daily` (per-device, per-UTC-day question count + input/output token totals). Migrations are checked in under `apps/demo/drizzle/`; `pnpm --filter demo db:generate`/`db:migrate` regenerate/apply them.
+- **Layered abuse protection**, cheapest and most-always-on first:
+  1. Auth (bearer token must match a non-revoked device).
+  2. Burst rate limit — Upstash Redis sliding window, per device *and* per IP as independent dimensions (`apps/demo/src/lib/rate-limit.ts`). Deliberately **fails open** if `UPSTASH_REDIS_REST_URL`/`_TOKEN` aren't set, so local dev needs no Redis — but that also means Upstash is genuinely optional only because layer 3 never is.
+  3. Daily quota (`apps/demo/src/lib/usage.ts`, `DAILY_QUESTION_LIMIT = 30`) — lives in the same Postgres database as the device token, so it can't be skipped by omitting an env var. Only a *successful* model call increments it, so a failed request doesn't cost the user quota.
+  4. Request validation — replaced the old `as Partial<PageQARequest>` cast with a Zod schema whose ceilings (750 chunks, 2000 chars/chunk) match the extension's own extraction limits (`apps/extension/src/content/extract.ts`) with headroom; anything outside that shape is now rejected (400) instead of being silently truncated, which used to hide the problem from the caller.
+- **Cost visibility**: `generateObject`'s real `usage.inputTokens`/`outputTokens` are now captured and persisted per device per day (previously discarded entirely).
+- **Registration is itself rate-limited** per IP (20/hour) so a script can't mint unlimited devices to farm free quota from one machine.
+- Added `apps/demo/drizzle.config.ts` and `db:generate`/`db:migrate`/`db:studio` scripts; documented all new env vars (`DATABASE_URL`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`) in `apps/demo/.env.example`, the root README's new "Ask This Page backend" section, and `apps/extension/README.md`'s setup/troubleshooting sections.
+- **Deliberately deferred** (anonymous-by-default was the chosen scope, not full sign-in): no user accounts yet — `devices.user_id` exists but is unused, reserved for an optional future sign-in that links a device to an account for cross-device history or higher limits without a breaking schema change. Also deferred: updating the extension's `host_permissions` for a real production domain (still localhost-only) — needed before shipping to real users, tracked as a follow-up rather than guessed at here.
+
 ### 2026-09-13 — Single source of truth for the site's canonical URL
 
 - Reviewed the app's URL structure end to end (`/`, `/products`, `/products/[slug]`, `/ecommerce`, `/portfolio`, `/api/*`). The routes themselves were already clean — lowercase, kebab-case, no query strings or opaque IDs — so no paths changed.

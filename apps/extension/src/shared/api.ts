@@ -1,4 +1,5 @@
 import type { PageChunk, PageQAResult, PageQARequest } from "@chatbot/core";
+import { ensureDeviceToken, resetDeviceToken } from "./auth";
 
 /** Default backend endpoint (the demo app running locally). */
 export const DEFAULT_ENDPOINT = "http://localhost:3000/api/page-qa";
@@ -33,6 +34,17 @@ export async function setEndpoint(endpoint: string): Promise<void> {
  * Fetched from the side panel (extension origin) using the host permission for
  * the endpoint, so it is not subject to CORS restrictions.
  */
+async function postQuestion(endpoint: string, body: PageQARequest, token: string): Promise<Response> {
+  return fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+}
+
 export async function askPage(params: {
   question: string;
   url: string;
@@ -48,13 +60,18 @@ export async function askPage(params: {
     chunks: params.chunks,
   };
 
+  let token = await ensureDeviceToken();
+
   let res: Response;
   try {
-    res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+    res = await postQuestion(endpoint, body, token);
+    // A 401 means our stored token is unknown/revoked (e.g. the database was
+    // reset) — register a fresh device once and retry, rather than leaving
+    // the extension permanently broken until it's manually reinstalled.
+    if (res.status === 401) {
+      token = await resetDeviceToken();
+      res = await postQuestion(endpoint, body, token);
+    }
   } catch {
     throw new Error(
       `Couldn't reach the backend at ${endpoint}. Make sure it's running.`
