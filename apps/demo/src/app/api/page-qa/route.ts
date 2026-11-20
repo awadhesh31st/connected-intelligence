@@ -1,12 +1,10 @@
 import { generateObject } from "ai";
 import { z } from "zod";
 import { ProviderRegistry, createGoogleProvider } from "@chatbot/providers";
-import {
-  ContextEngine,
-  createPageQAContext,
-  type PageChunk,
-  type PageQARequest,
-} from "@chatbot/core/server";
+import { ContextEngine, createPageQAContext } from "@chatbot/core/server";
+import { extractBearerToken, verifyDeviceToken } from "@/lib/auth/device-token";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { DAILY_QUESTION_LIMIT, getTodayUsage, recordUsage } from "@/lib/usage";
 
 // Register the Google provider once per module load.
 const registry = ProviderRegistry.getInstance();
@@ -42,31 +40,53 @@ const pageQASchema = z.object({
     .describe("Citations pointing back at the source chunks."),
 });
 
-// Guard rails to keep prompts within a reasonable size.
-const MAX_CHUNKS = 400;
-const MAX_CHUNK_CHARS = 1200;
+// Request validation. Ceilings match (with headroom) the extension's own
+// extraction limits (apps/extension/src/content/extract.ts: 600 chunks,
+// 2000 chars each) — legitimate traffic is always well inside these, so a
+// request that exceeds them is either a bug or abuse and is rejected
+// outright (413) rather than silently truncated, which used to hide the
+// problem from the caller.
+const REQUEST_MAX_CHUNKS = 750;
+const REQUEST_MAX_CHUNK_TEXT = 2000;
 
-// Permissive CORS so the request works from any extension fetch context.
-// This endpoint carries no cookies/credentials; the API key stays server-side.
+const pageChunkSchema = z.object({
+  id: z.string().min(1).max(64),
+  tag: z.string().min(1).max(32),
+  heading: z.string().max(300).optional(),
+  text: z.string().min(1).max(REQUEST_MAX_CHUNK_TEXT),
+});
+
+const pageQARequestSchema = z.object({
+  question: z.string().min(1).max(2000),
+  url: z.string().max(2048),
+  title: z.string().max(500),
+  chunks: z.array(pageChunkSchema).min(1).max(REQUEST_MAX_CHUNKS),
+});
+
+// Separate, smaller ceilings for how much of the (already-validated) request
+// actually gets spent on prompt tokens — a cost control, not a security gate.
+const PROMPT_MAX_CHUNKS = 400;
+const PROMPT_MAX_CHUNK_CHARS = 1200;
+
 const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
 
-function json(body: unknown, status = 200): Response {
-  return Response.json(body, { status, headers: CORS_HEADERS });
+function json(body: unknown, status = 200, extraHeaders?: Record<string, string>): Response {
+  return Response.json(body, { status, headers: { ...CORS_HEADERS, ...extraHeaders } });
 }
 
 export function OPTIONS(): Response {
   return new Response(null, { status: 204, headers: CORS_HEADERS });
 }
 
-function formatChunks(chunks: PageChunk[]): string {
+function formatChunks(chunks: z.infer<typeof pageChunkSchema>[]): string {
   return chunks
-    .slice(0, MAX_CHUNKS)
+    .slice(0, PROMPT_MAX_CHUNKS)
     .map((c) => {
-      const text = c.text.slice(0, MAX_CHUNK_CHARS);
+      const text = c.text.slice(0, PROMPT_MAX_CHUNK_CHARS);
       const heading = c.heading ? ` (${c.heading})` : "";
       return `[${c.id}]${heading} ${text}`;
     })
@@ -75,15 +95,45 @@ function formatChunks(chunks: PageChunk[]): string {
 
 export async function POST(request: Request): Promise<Response> {
   try {
-    const body = (await request.json()) as Partial<PageQARequest>;
-    const { question, url, title, chunks } = body;
+    // 1. Authenticate the device.
+    const token = extractBearerToken(request);
+    const device = await verifyDeviceToken(token);
+    if (!device) {
+      return json(
+        { error: "Missing or invalid device token. Re-install or reload the extension." },
+        401
+      );
+    }
 
-    if (!question?.trim()) {
-      return json({ error: "No question provided." }, 400);
+    // 2. Burst rate limit (device + IP as two independent dimensions — a
+    // shared/stolen token still hits the IP limit, and a rotating IP behind
+    // one device still hits the device limit).
+    const ip = getClientIp(request);
+    const [deviceLimit, ipLimit] = await Promise.all([
+      checkRateLimit("page-qa:device", device.id, 10, "1 m"),
+      checkRateLimit("page-qa:ip", ip, 30, "1 m"),
+    ]);
+    if (!deviceLimit.allowed || !ipLimit.allowed) {
+      return json({ error: "Too many requests. Please wait a moment and try again." }, 429);
     }
-    if (!chunks?.length) {
-      return json({ error: "No page content provided." }, 400);
+
+    // 3. Daily quota (the layer that's always enforced — see lib/usage.ts).
+    const usage = await getTodayUsage(device.id);
+    if (usage.remaining <= 0) {
+      return json(
+        {
+          error: `Daily limit of ${DAILY_QUESTION_LIMIT} questions reached. Try again tomorrow.`,
+        },
+        429
+      );
     }
+
+    // 4. Validate the request body.
+    const parsed = pageQARequestSchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return json({ error: "Invalid request.", details: parsed.error.flatten() }, 400);
+    }
+    const { question, url, title, chunks } = parsed.data;
 
     const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
     if (!apiKey) {
@@ -96,8 +146,8 @@ export async function POST(request: Request): Promise<Response> {
     const system = pageQAEngine.buildSystemPrompt();
 
     const prompt = [
-      `Page title: ${title ?? "(unknown)"}`,
-      `Page URL: ${url ?? "(unknown)"}`,
+      `Page title: ${title || "(unknown)"}`,
+      `Page URL: ${url || "(unknown)"}`,
       "",
       "Page content chunks:",
       formatChunks(chunks),
@@ -111,14 +161,20 @@ export async function POST(request: Request): Promise<Response> {
       apiKey,
     });
 
-    const { object } = await generateObject({
+    const { object, usage: modelUsage } = await generateObject({
       model,
       schema: pageQASchema,
       system,
       prompt,
     });
 
-    return json(object);
+    // Only counts against quota on success — a failed/errored call never does.
+    await recordUsage(device.id, {
+      inputTokens: modelUsage.inputTokens ?? 0,
+      outputTokens: modelUsage.outputTokens ?? 0,
+    });
+
+    return json(object, 200, { "X-Quota-Remaining": String(usage.remaining - 1) });
   } catch (err) {
     const message =
       err instanceof Error ? err.message : "An unexpected error occurred.";
